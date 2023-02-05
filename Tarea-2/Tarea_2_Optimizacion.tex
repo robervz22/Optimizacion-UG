@@ -1,0 +1,817 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Tarea\_2\_Optimizacion}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    \title{Tarea 2 Optimización}
+    \author{Roberto Vásquez Martínez \\ Profesor: Joaquín Peña Acevedo}
+    \date{20/Febrero/2022}
+    \maketitle    
+    
+
+    
+    \hypertarget{ejercicio-1-4-puntos}{%
+\section{Ejercicio 1 (4 puntos)}\label{ejercicio-1-4-puntos}}
+
+Calcular las raíces de los polinomios dados y generar las gráficas de
+los polinomos para mostrar las raíces reales encontradas.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Escriba una función que reciba un arreglo \(c\) que contiene los
+  coeficientes del polinomio, de modo que si \(c\) es un arreglo de
+  longitud \(n\) el valor del polinomio de grado \(n-1\) en \(x\) se
+  calcula mediante
+\end{enumerate}
+
+\[ c[0]*x**(n-1) + c[1]*x**(n-2) + ... + c[n-2]*x + c[n-1]\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+  Revise la documentación de la función
+  \href{https://numpy.org/doc/stable/reference/generated/numpy.roots.html}{roots()}
+  de Numpy y úsela para obtener un arreglo con las raíces del polinomio
+  e imprima las raíces encontradas.
+\item
+  Las raíces pueden ser complejas. Obtenga un arreglo \(r\) que contenga
+  sólo las raíces reales, imprimalo y calcule las raíz real \(r_{min}\)
+  más pequeña y la raíz real \(r_{max}\) más grande.
+\item
+  Use la función \texttt{linspace()} para generar un arreglo \(x\) con
+  100 valores que corresponden a una partición del intervalo
+  \([r_{min}-1, r_{max}+1]\). Evalúe el polinomio en los valores de
+  \(x\). Puede usar la función de Numpy
+  \href{https://numpy.org/doc/stable/reference/generated/numpy.polyval.html\#numpy.polyval}{polyval()}
+  para evaluar el polinomio y generar un arreglo \(y\).
+\item
+  Use los arreglos \(x\) y \(y\) para generar la gráfica del polinomio.
+\item
+  Agregue a la gráfica los puntos que representan las raíces reales
+  \(r\). Para esto evalue el polinomio en \(r\) para generar un arreglo
+  \(polr\) con esos valores. Use los arreglos \(r\) y \(polr\) para
+  graficar como puntos en la gráfica anterior\\
+  para ver que coinciden con los ceros de las gráfica.
+\item
+  Pruebe la función con los siguientes polinomios:
+\end{enumerate}
+
+\[ f_1(x) = -4 {{x}^{3}}+33 {{x}^{2}}+97 x-840 \]
+
+\[ f_2(x) = -2 {{x}^{4}}+15 {{x}^{3}}-36 {{x}^{2}}+135 x-162 \]
+
+\hypertarget{soluciuxf3n}{%
+\subsection{Solución:}\label{soluciuxf3n}}
+
+    La función que implementa los puntos del 1 al 6 es
+\texttt{pol\_roots\_plot()} y se encuentra en el módulo
+\texttt{lib\_t2.py}. Probamos esta función con el polinomio \(f_1\). En
+primer lugar, imprimimos las raices de \(f_1\).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{os}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{from} \PY{n+nn}{lib\PYZus{}t2} \PY{k+kn}{import} \PY{o}{*}
+\PY{k+kn}{from} \PY{n+nn}{plotnine} \PY{k+kn}{import} \PY{o}{*}
+\PY{n}{coef\PYZus{}f1}\PY{o}{=}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mf}{4.0}\PY{p}{,}\PY{l+m+mf}{33.0}\PY{p}{,}\PY{l+m+mf}{97.0}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mf}{840.0}\PY{p}{]}
+\PY{n}{roots\PYZus{}f1}\PY{p}{,}\PY{n}{re\PYZus{}roots\PYZus{}f1}\PY{p}{,}\PY{n}{gg\PYZus{}f1}\PY{o}{=}\PY{n}{poly\PYZus{}roots\PYZus{}plot}\PY{p}{(}\PY{n}{coef\PYZus{}f1}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Las raíces de f1 son: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{roots\PYZus{}f1}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Las raíces reales son: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{re\PYZus{}roots\PYZus{}f1}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Las raíces de f1 son:  [-5.    8.    5.25]
+Las raíces reales son:  [-5.    8.    5.25]
+    \end{Verbatim}
+
+    La gráfica del polinomio, con dominio
+\([r_{\mathrm{min}}-1,r_{\mathrm{max}}+1]\) donde
+\(r_{\mathrm{min}},r_{\mathrm{max}}\) son la mínima y máxima de las
+raíces reales del polinomio \(f_1\), es:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{gg\PYZus{}1}\PY{o}{=}\PY{n}{gg\PYZus{}f1}\PY{o}{+}\PY{n}{xlab}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}x\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{+}\PY{n}{ylab}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}f\PYZus{}1(x)\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{+}\PY{n}{ggtitle}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Gráfica de \PYZdl{}f\PYZus{}1\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{+}\PY{n}{theme}\PY{p}{(}\PY{n}{figure\PYZus{}size}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{6}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{n}{gg\PYZus{}1}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Tarea_2_Optimizacion_files/Tarea_2_Optimizacion_4_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+<ggplot: (8737991389296)>
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Hacemos el mismo ejercicio para el polinomio \(f_2\). Primero,
+imprimimos las raíces y las raíces reales.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{coef\PYZus{}f2}\PY{o}{=}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mf}{2.0}\PY{p}{,}\PY{l+m+mf}{15.0}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mf}{36.0}\PY{p}{,}\PY{l+m+mf}{135.0}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mf}{162.0}\PY{p}{]}
+\PY{n}{roots\PYZus{}f2}\PY{p}{,}\PY{n}{re\PYZus{}roots\PYZus{}f2}\PY{p}{,}\PY{n}{gg\PYZus{}f2}\PY{o}{=}\PY{n}{poly\PYZus{}roots\PYZus{}plot}\PY{p}{(}\PY{n}{coef\PYZus{}f2}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Las raíces de f1 son: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{roots\PYZus{}f2}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Las raíces reales son: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{re\PYZus{}roots\PYZus{}f2}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Las raíces de f1 son:  [6.00000000e+00+0.j 8.32667268e-16+3.j 8.32667268e-16-3.j
+ 1.50000000e+00+0.j]
+Las raíces reales son:  [6.  1.5]
+    \end{Verbatim}
+
+    Y graficamos en el dominio \([r_{\mathrm{min}}-1,r_{\mathrm{max}}+1]\)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{gg\PYZus{}2}\PY{o}{=}\PY{n}{gg\PYZus{}f2}\PY{o}{+}\PY{n}{xlab}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}x\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{+}\PY{n}{ylab}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}f\PYZus{}2(x)\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{+}\PY{n}{ggtitle}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Gráfica de \PYZdl{}f\PYZus{}2\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{+}\PY{n}{theme}\PY{p}{(}\PY{n}{figure\PYZus{}size}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{6}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{n}{gg\PYZus{}2}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Tarea_2_Optimizacion_files/Tarea_2_Optimizacion_8_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+<ggplot: (8737991242084)>
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \hypertarget{ejercicio-2-6-puntos}{%
+\section{Ejercicio 2 (6 puntos)}\label{ejercicio-2-6-puntos}}
+
+Programar la función que resuelve el problema de ajustar un polinomio a
+un conjunto de puntos \(\{(x_0, y_0), (x_1, y_1), ..., (x_m, y_m)\}\)
+usando mínimos cuadrados lineales.
+
+Si revisan las notas del curso de métodos numéricos, se ve que para
+ajustar el polinomio de grado \(n\)
+\(p(x) = c_n x^n + c_{n-1} x^{n-1} + ... + c_1 x + c_0\) mediante
+mínimos cuadrados, hay que plantear el problema de minimizar la suma de
+diferencias elevadas al cuadrado:
+
+\(\sum_{i=0}^{m} (p(x_i) - y_i )^2\)
+
+Esto nos lleva a construir la matriz \(A\) y el vector de términos
+independientes
+
+    \[ A = \left[\begin{array}{ccccc}
+x_1^n  & x_1^{n-1} & \cdots & x_1 & 1 \\
+x_2^n  & x_2^{n-1} & \cdots & x_2 & 1 \\
+\vdots & \vdots    &        & \vdots  & \vdots \\
+x_m^n  & x_m^{n-1} & \cdots & x_m & 1 
+\end{array}\right], \qquad
+b =\left( \begin{array}{c}
+y_1 \\ y_2 \\ \vdots \\ y_m
+\end{array}  
+\right)\]
+
+    Entonces el vector \(c\) con los coeficientes del polinomio se obtiene
+resolviendo el sistema de ecuaciones
+
+\(A^{\top} A c= A^{\top} y\).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Programe la función que recibe como argumento un arreglo 2D que
+  contiene los puntos \(\{(x_0, y_0), (x_1, y_1), ..., (x_m, y_m)\}\) y
+  el grado del polinomio \(n\), que construya y resuelva el sistema de
+  ecuaciones para obtener el vector de coeficientes \(c\) usando las
+  funciones de Numpy y que devuelva este arreglo y el número de
+  condición de la matriz del sistema. Este último dato lo puede obtener
+  usando la función \texttt{numpy.linalg.cond()}.
+\item
+  Escriba una función que reciba como argumentos el nombre de un archivo
+  que contiene los datos, el valor \(n\) del grado del polinomio que se
+  quiere ajustar y un entero \(r>0\).
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  La función debe leer el archivo, cargar los datos en una matriz y usar
+  la función del inciso anterior para obtener el vector de coeficientes
+  \(c\) y el número de condición. El archivo contiene una matriz con dos
+  columnas. La primer columna tiene las abscisas
+  \(x_0, x_1, ..., x_{m}\) y la segunda columna tiene las ordenadas
+  \(y_0, y_1, ..., y_{m}\) de los puntos.
+\item
+  Obtenga el valor mínimo \(x_{\min}\) y máximo \(x_{\max}\) de las
+  abscicas \(x_i\).\\
+\item
+  Genere una partición \(z_0, z_1, ..., z_{r-1}\) del intervalo\\
+  \([x_{\min}, x_{\min}]\) con \(r\) puntos y use la función
+  \texttt{numpy.polyval()} para evaluar el polinomio \(p(x)\) en los
+  puntos de la partición del intervalo.
+\item
+  Haga que la función imprima el grado \(n\) del polinomio, los
+  coeficientes \(\mathbf{c}\) del polinomio y el número de condición.
+  También haga que la función genere una gráfica que muestre los puntos
+  \(\{(x_0, y_0), (x_1, y_1), ..., (x_m, y_m)\}\) (como puntos) y los
+  puntos \((z_i, p(z_i))\) con un trazo continuo para comparar los datos
+  con la gráfica del polinomio.
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Pruebe la función del inciso anterior usando los archivos \texttt{npy}
+  que se encuentran dentro del archivo \texttt{datosTarea02.zip}. Para
+  cada caso, use \(r=100\) y \(n=1,2,3,4,5\) y \(6\) (puede poner un
+  ciclo para generar los resultados de cada caso).
+\end{enumerate}
+
+\hypertarget{soluciuxf3n}{%
+\subsection{Solución:}\label{soluciuxf3n}}
+
+    La función del numeral 1 que encuentra los coeficientes resolviendo el
+sistema \(A^TAc=A^Ty\) y el número de condición de \(A^TA\) es
+\texttt{pol\_solve()} y la función del punto 2 que recibe como argumento
+el grado del polinomio a ajustar y el nombre del archivo para cargar los
+datos desde un archivo \texttt{.npy} es \texttt{pol\_reg()}, ambas
+funciones se encuentran al igual que en el ejercicio 1 en el módulo
+\texttt{lib\_t2.py}. A continuación ponemos el path, tomando como
+referencia el directorio donde se está ejecutando este notebook, de los
+archivos con los datos.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Path de los archivos con los datos}
+\PY{n}{DataEj1}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/datos Tarea 2/datos1.npy}\PY{l+s+s1}{\PYZsq{}}
+\PY{n}{DataEj2}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{/datos Tarea 2/datos2.npy}\PY{l+s+s1}{\PYZsq{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    En primer lugar, probamos estas funciones con el archivo de datos
+\texttt{datos1.npy}. A continuación hacemos las pruebas correspondientes
+con \(n=1,2,3,4,5,6\) y \(r=100\), en la siguiente celda se imprime el
+vector con los coeficientes del polinomio resultante para cada grado, en
+orden decreciente, es decir, del coeficiente de grado más alto hasta el
+término independiente, además del número de condición.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{matplotlib} \PY{k+kn}{import} \PY{n}{gridspec}
+\PY{k+kn}{from} \PY{n+nn}{plotnine} \PY{k+kn}{import} \PY{n}{data}
+\PY{n}{np}\PY{o}{.}\PY{n}{set\PYZus{}printoptions}\PY{p}{(}\PY{n}{precision}\PY{o}{=}\PY{l+m+mi}{4}\PY{p}{)}
+\PY{n}{list\PYZus{}plots}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{n}{nn}\PY{o}{=}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{]}
+\PY{n}{r}\PY{o}{=}\PY{l+m+mi}{100}
+\PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n}{nn}\PY{p}{:}
+    \PY{n}{c}\PY{p}{,}\PY{n}{cod\PYZus{}num}\PY{p}{,}\PY{n}{gg}\PY{o}{=}\PY{n}{poly\PYZus{}reg}\PY{p}{(}\PY{n}{DataEj1}\PY{p}{,}\PY{n}{n}\PY{p}{,}\PY{n}{r}\PY{p}{)}
+    \PY{n}{list\PYZus{}plots}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{gg}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Los coeficientes del polinomio de grado }\PY{l+s+si}{\PYZob{}}\PY{n}{n}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ son: }\PY{l+s+si}{\PYZob{}}\PY{n}{c}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El número de condición de la matriz A es: }\PY{l+s+si}{\PYZpc{}.4f}\PY{l+s+s1}{\PYZsq{}}\PY{o}{\PYZpc{}}\PY{k}{cod\PYZus{}num})
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Los coeficientes del polinomio de grado 1 son: [-2.5592 -3.5203]
+El número de condición de la matriz A es: 29.5460
+
+
+Los coeficientes del polinomio de grado 2 son: [-0.4416 -0.7196  3.1585]
+El número de condición de la matriz A es: 2458.7290
+
+
+Los coeficientes del polinomio de grado 3 son: [-0.0611 -0.0726  0.5994 -0.3879]
+El número de condición de la matriz A es: 210402.5774
+
+
+Los coeficientes del polinomio de grado 4 son: [ 0.017  -0.2059 -0.4706  3.6684
+1.4594]
+El número de condición de la matriz A es: 15816940.8189
+
+
+Los coeficientes del polinomio de grado 5 son: [ 1.2995e-03  3.0530e-03
+-2.3079e-01 -4.8683e-02  3.7021e+00 -4.0155e-03]
+El número de condición de la matriz A es: 1627465651.9694
+
+
+Los coeficientes del polinomio de grado 6 son: [-2.4132e-04  4.5146e-03
+5.4331e-03 -3.5826e-01  4.2782e-02  4.7803e+00
+ -2.2272e-01]
+El número de condición de la matriz A es: 132393662527.0403
+
+
+    \end{Verbatim}
+
+    Finalmente, graficamos los resultados obtenidos. En línea continua
+aparece la gráfica del polinomio resultante de resolver el sistema de
+ecuaciones.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{fig} \PY{o}{=} \PY{p}{(}\PY{n}{ggplot}\PY{p}{(}\PY{p}{)}\PY{o}{+}\PY{n}{geom\PYZus{}blank}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{data}\PY{o}{.}\PY{n}{diamonds}\PY{p}{)}\PY{o}{+}\PY{n}{theme\PYZus{}void}\PY{p}{(}\PY{p}{)}\PY{o}{+}\PY{n}{theme}\PY{p}{(}\PY{n}{figure\PYZus{}size}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{8}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{draw}\PY{p}{(}\PY{p}{)}
+\PY{n}{gs} \PY{o}{=} \PY{n}{gridspec}\PY{o}{.}\PY{n}{GridSpec}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{)}
+\PY{n}{index}\PY{o}{=}\PY{l+m+mi}{0}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{:}
+    \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{)}\PY{p}{:}
+        \PY{n}{ax}\PY{o}{=}\PY{n}{fig}\PY{o}{.}\PY{n}{add\PYZus{}subplot}\PY{p}{(}\PY{n}{gs}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{p}{,}\PY{n}{title}\PY{o}{=}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Grado }\PY{l+s+si}{\PYZob{}}\PY{n}{index}\PY{o}{+}\PY{l+m+mi}{1}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{xmargin}\PY{o}{=}\PY{l+m+mi}{20}\PY{p}{,}\PY{n}{ymargin}\PY{o}{=}\PY{l+m+mi}{20}\PY{p}{)}
+        \PY{n}{\PYZus{}}\PY{o}{=}\PY{n}{list\PYZus{}plots}\PY{p}{[}\PY{n}{index}\PY{p}{]}\PY{o}{.}\PY{n}{\PYZus{}draw\PYZus{}using\PYZus{}figure}\PY{p}{(}\PY{n}{fig}\PY{p}{,}\PY{p}{[}\PY{n}{ax}\PY{p}{]}\PY{p}{)}
+        \PY{n}{fig}\PY{o}{.}\PY{n}{tight\PYZus{}layout}\PY{p}{(}\PY{n}{pad}\PY{o}{=}\PY{l+m+mf}{2.0}\PY{p}{)}
+        \PY{n}{index}\PY{o}{+}\PY{o}{=}\PY{l+m+mi}{1}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Tarea_2_Optimizacion_files/Tarea_2_Optimizacion_17_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Observamos que el número de condición aumenta conforme aumenta el grado
+del polinomio, esto se debe a que para mayor grado este ajuste es más
+susceptible a la muestra que tenemos. Además, se ve que del grado 4 al 6
+el ajuste es prácticamente el mismo, lo que se ve también en la magnitud
+de los coeficientes de orden 5 y 6, que son números pequeños. Si
+tuvieramos que escoger un polinomio para modelar los datos sería el de
+grado 4, pues es el mejor condicionado y en que se observa un buen
+ajuste, aunque también podrías elegir el de grado 3 ya que aunque no
+tiene un gran ajuste como el polinomio de grado 4 su condicionamiento es
+mucho mejor.
+
+    Hacemos el mismo ejercicio para los datos en \texttt{datos2.npy}.
+Primero imprimimos los vectores de coeficientes resultantes que definen
+a los polnomios de grado \(n=1,2,3,4,5,6\) con tamaño de partición
+\(r=100\).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{np}\PY{o}{.}\PY{n}{set\PYZus{}printoptions}\PY{p}{(}\PY{n}{precision}\PY{o}{=}\PY{l+m+mi}{4}\PY{p}{)}
+\PY{n}{list\PYZus{}plots}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{n}{nn}\PY{o}{=}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{]}
+\PY{n}{r}\PY{o}{=}\PY{l+m+mi}{100}
+\PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n}{nn}\PY{p}{:}
+    \PY{n}{c}\PY{p}{,}\PY{n}{cod\PYZus{}num}\PY{p}{,}\PY{n}{gg}\PY{o}{=}\PY{n}{poly\PYZus{}reg}\PY{p}{(}\PY{n}{DataEj2}\PY{p}{,}\PY{n}{n}\PY{p}{,}\PY{n}{r}\PY{p}{)}
+    \PY{n}{list\PYZus{}plots}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{gg}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Los coeficientes del polinomio de grado }\PY{l+s+si}{\PYZob{}}\PY{n}{n}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ son: }\PY{l+s+si}{\PYZob{}}\PY{n}{c}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El número de condición de la matriz A es: }\PY{l+s+si}{\PYZpc{}.4f}\PY{l+s+s1}{\PYZsq{}}\PY{o}{\PYZpc{}}\PY{k}{cod\PYZus{}num})
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Los coeficientes del polinomio de grado 1 son: [ 0.455  21.8233]
+El número de condición de la matriz A es: 57.6662
+
+
+Los coeficientes del polinomio de grado 2 son: [-0.0728 -0.0499 21.9262]
+El número de condición de la matriz A es: 3340.5363
+
+
+Los coeficientes del polinomio de grado 3 son: [ 0.0889  0.8635  0.7332 16.6059]
+El número de condición de la matriz A es: 458979.9355
+
+
+Los coeficientes del polinomio de grado 4 son: [ 0.0259  0.4468  1.7319 -1.8706
+11.8505]
+El número de condición de la matriz A es: 57617346.0545
+
+
+Los coeficientes del polinomio de grado 5 son: [-0.0184 -0.307  -1.0775  2.7639
+10.8231 16.0055]
+El número de condición de la matriz A es: 5519382925.3796
+
+
+Los coeficientes del polinomio de grado 6 son: [-2.6826e-03 -7.6110e-02
+-6.6084e-01 -1.2096e+00  6.2980e+00  1.4285e+01
+  1.1681e+01]
+El número de condición de la matriz A es: 537838254507.8020
+
+
+    \end{Verbatim}
+
+    Y observamos el ajuste de cada uno de estos polinomios con la muestra.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{fig} \PY{o}{=} \PY{p}{(}\PY{n}{ggplot}\PY{p}{(}\PY{p}{)}\PY{o}{+}\PY{n}{geom\PYZus{}blank}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{data}\PY{o}{.}\PY{n}{diamonds}\PY{p}{)}\PY{o}{+}\PY{n}{theme\PYZus{}void}\PY{p}{(}\PY{p}{)}\PY{o}{+}\PY{n}{theme}\PY{p}{(}\PY{n}{figure\PYZus{}size}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{8}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{draw}\PY{p}{(}\PY{p}{)}
+\PY{n}{gs} \PY{o}{=} \PY{n}{gridspec}\PY{o}{.}\PY{n}{GridSpec}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{)}
+\PY{n}{index}\PY{o}{=}\PY{l+m+mi}{0}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{:}
+    \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{)}\PY{p}{:}
+        \PY{n}{ax}\PY{o}{=}\PY{n}{fig}\PY{o}{.}\PY{n}{add\PYZus{}subplot}\PY{p}{(}\PY{n}{gs}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{]}\PY{p}{,}\PY{n}{title}\PY{o}{=}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Grado }\PY{l+s+si}{\PYZob{}}\PY{n}{index}\PY{o}{+}\PY{l+m+mi}{1}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{xmargin}\PY{o}{=}\PY{l+m+mi}{20}\PY{p}{,}\PY{n}{ymargin}\PY{o}{=}\PY{l+m+mi}{20}\PY{p}{)}
+        \PY{n}{\PYZus{}}\PY{o}{=}\PY{n}{list\PYZus{}plots}\PY{p}{[}\PY{n}{index}\PY{p}{]}\PY{o}{.}\PY{n}{\PYZus{}draw\PYZus{}using\PYZus{}figure}\PY{p}{(}\PY{n}{fig}\PY{p}{,}\PY{p}{[}\PY{n}{ax}\PY{p}{]}\PY{p}{)}
+        \PY{n}{fig}\PY{o}{.}\PY{n}{tight\PYZus{}layout}\PY{p}{(}\PY{n}{pad}\PY{o}{=}\PY{l+m+mf}{2.0}\PY{p}{)}
+        \PY{n}{index}\PY{o}{+}\PY{o}{=}\PY{l+m+mi}{1}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Tarea_2_Optimizacion_files/Tarea_2_Optimizacion_22_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Aqui observamos un ajuste mucho más pobre incluso para los grados del 4
+al 6 a diferencia de la primer base de datos, incluso el
+condicionamiento es peor para cada polinomio. El que tiene mejor ajuste
+dado los datos es el grado \(n=6\), sin embargo debido al
+condicionamiento tan alto podría pensar que la naturaleza de los datos
+no es polinomial, de hecho se observa un comportamiento periodico, por
+lo que podría pensarse más bien en una función seno o coseno.
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

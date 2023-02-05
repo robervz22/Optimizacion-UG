@@ -1,0 +1,877 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Tarea\_11\_Optimizacion}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+\title{Tarea 11 Optimización}
+\author{Roberto Vásquez Martínez \\ Profesor: Joaquín Peña Acevedo}
+\date{22/Mayo/2022}
+\maketitle 
+    
+    
+    
+
+    
+    \hypertarget{ejercicio-1-3-puntos}{%
+\section{Ejercicio 1 (3 puntos)}\label{ejercicio-1-3-puntos}}
+
+Usando alguna librería de Python para resolver problemas de programación
+lineal, escriba y resuelva el problema de la Tarea 10:
+
+\[
+\begin{array}{rl}
+\max & x_1 + x_2\\
+     & 50x_1 + 24x_2 \leq 2400 \\
+     & 30x_1 + 33x_2 \leq 2100 \\
+     & x_1 \geq 45 \\
+     & x_2 \geq 5
+\end{array}
+\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Cambie el problema para que todas las desigualdes sean de la forma
+\end{enumerate}
+
+\[\mathbf{A}\mathbf{x}\leq \mathbf{b}.\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+  Construya los vectores \(\mathbf{b},\mathbf{c}\) y la matriz
+  \(\mathbf{A}\) y resuelva el problema con la librería.
+\item
+  Imprima un mensaje que indique si se encontró la solución, y en ese
+  caso imprima :
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  la solución \(\mathbf{x}\),
+\item
+  el valor de la función objetivo,
+\item
+  las variables de holgura,
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Calcule los errores
+\end{enumerate}
+
+\[ E_x = \sum_{x_i<0} |x_i|. \]
+\[ E_{b-Ax} = \sum_{(b-Ax)_i<0} |(b-Ax)_i|\]
+
+Es decir, se suman las componentes de \(\mathbf{x}\) que no cumplen la
+condición \(\mathbf{x}\geq \mathbf{0}\) y las componentes que no cumplen
+con \(\mathbf{A}\mathbf{x}\leq \mathbf{b}\).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Defina la tolerancia \(\tau=\sqrt{\epsilon_m}\), donde \(\epsilon_m\)
+  es el épsilon de la máquina. Si \(E_x<\tau\) imprima un mensaje de que
+  se cumple la condición de no negatividad, y si \(E_{b-Ax}<\tau\)
+  imprima un mensaje de que se cumplen las restricciones de desigualdad.
+\end{enumerate}
+
+\hypertarget{soluciuxf3n}{%
+\subsection{Solución:}\label{soluciuxf3n}}
+
+    En primer lugar, hallaremos \(\mathbf{A},\mathbf{b}\) de forma que las
+restricciones son de la forma \(\mathbf{A}\mathbf{x}\leq\mathbf{b}\).
+Notemos que las restricciones son equivalentes a la siguiente lista de
+desigualdades \[
+\begin{array}{rl}
+     & 50x_1 + 24x_2 \leq 2400 \\
+     & 30x_1 + 33x_2 \leq 2100 \\
+     & -x_1 \leq 45 \\
+     & -x_2 \leq 5
+\end{array}
+\]
+
+Si \(\mathbf{c}=(-1,-1)^T\), \(\mathbf{b}=(2400,2100,-45,-5)^T\) y \[ 
+\mathbf{A}=\begin{pmatrix}
+50 & 24\\
+30 & 33\\
+-1 & 0\\
+ 0 & -1
+\end{pmatrix},
+\]
+
+entonces el problema de optimización que queremos resolver es \[ 
+\min_{\mathbf{x}}\mathbf{c}^T\mathbf{x}\quad\text{ sujeto a }\quad \mathbf{A}\mathbf{x}\leq \mathbf{b},
+\]
+
+que es lo que queríamos obtener el numeral 1.
+
+Para el numeral 2 y 3 construimos los vectores y matrices
+correspondiente para posteriormente aplicar la librería \texttt{linprog}
+de \texttt{scipy} obtener la solución así como los demás datos
+requeridos. Esto lo hacemos en la siguiente celda de código.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{optimize} \PY{k+kn}{import} \PY{n}{linprog}
+\PY{k+kn}{import} \PY{n+nn}{scipy}
+
+
+\PY{c+c1}{\PYZsh{} Coeficientes de la funcion objetivo}
+\PY{n}{obj} \PY{o}{=} \PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.0}\PY{p}{]}
+
+\PY{c+c1}{\PYZsh{} Coeficientes del lado izquierdo de las desigualdades del tipo \PYZdq{}menor o igual a\PYZdq{}}
+\PY{n}{lhs\PYZus{}ineq} \PY{o}{=} \PY{p}{[}\PY{p}{[}\PY{l+m+mf}{50.0}\PY{p}{,} \PY{l+m+mf}{24.0}\PY{p}{]}\PY{p}{,}
+            \PY{p}{[}\PY{l+m+mf}{30.0}\PY{p}{,} \PY{l+m+mf}{33.0}\PY{p}{]}\PY{p}{,}
+            \PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.0}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{]}\PY{p}{,}
+            \PY{p}{[}\PY{l+m+mf}{0.0}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.0}\PY{p}{]}\PY{p}{]}
+
+\PY{c+c1}{\PYZsh{} Coeficientes del vector del lado derecho de las desigualdades del tipo \PYZdq{}menor o igual a\PYZdq{}}
+\PY{n}{rhs\PYZus{}ineq} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{2400}\PY{p}{,} \PY{l+m+mi}{2100}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{45}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{5}\PY{p}{]}
+
+
+\PY{c+c1}{\PYZsh{} Cotas de las variables}
+\PY{n}{bnd} \PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)}\PY{p}{,}  \PY{c+c1}{\PYZsh{} cotas para x1}
+       \PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)}\PY{p}{]}  \PY{c+c1}{\PYZsh{} cotas para x2}
+
+\PY{n}{opt\PYZus{}ineq} \PY{o}{=} \PY{n}{linprog}\PY{p}{(}\PY{n}{c}\PY{o}{=}\PY{n}{obj}\PY{p}{,} \PY{n}{A\PYZus{}ub}\PY{o}{=}\PY{n}{lhs\PYZus{}ineq}\PY{p}{,} \PY{n}{b\PYZus{}ub}\PY{o}{=}\PY{n}{rhs\PYZus{}ineq}\PY{p}{,} \PY{n}{bounds}\PY{o}{=}\PY{n}{bnd}\PY{p}{,}
+              \PY{n}{method}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{simplex}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Resultado del proceso:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}ineq}\PY{o}{.}\PY{n}{message}\PY{p}{)}
+\PY{k}{if} \PY{n}{opt\PYZus{}ineq}\PY{o}{.}\PY{n}{success}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Valor de la función objetivo:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}ineq}\PY{o}{.}\PY{n}{fun}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Solución:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}ineq}\PY{o}{.}\PY{n}{x}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Variables de holgura:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}ineq}\PY{o}{.}\PY{n}{slack}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+Resultado del proceso: Optimization terminated successfully.
+Valor de la función objetivo: -51.25
+Solución:
+ [45.    6.25]
+
+Variables de holgura:
+ [  0.   543.75   0.     1.25]
+    \end{Verbatim}
+
+    Y esta solución es la misma que la encontrada en el Ejercicio 2 de la
+Tarea 10 usando la forma estándar y hallando los puntos básicos
+factibles.
+
+    Finalmente, importamos el modulo \texttt{lib\_t11} donde implementamos
+la funciones \texttt{positive\_cond} y \texttt{restriction\_cond}, las
+cuales verifican bajo la tolerancia seleccionada si se cumplen la
+condición de no negatividad de las variables y las reestricciones de
+desigualdad, respectivamente.
+
+Resolvemos el numeral 4 y 5 con estas funciones en la siguiente celda.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{from} \PY{n+nn}{lib\PYZus{}t11} \PY{k+kn}{import} \PY{o}{*}
+
+\PY{n}{tol}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{eps}\PY{o}{*}\PY{o}{*}\PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{2}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Condicion de no negatividad}
+\PY{n}{positive\PYZus{}cond}\PY{p}{(}\PY{n}{tol}\PY{p}{,}\PY{n}{opt\PYZus{}ineq}\PY{o}{.}\PY{n}{x}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Restricciones de desigualdad}
+\PY{n}{restriction\PYZus{}cond}\PY{p}{(}\PY{n}{tol}\PY{p}{,}\PY{n}{opt\PYZus{}ineq}\PY{o}{.}\PY{n}{x}\PY{p}{,}\PY{n}{lhs\PYZus{}ineq}\PY{p}{,}\PY{n}{rhs\PYZus{}ineq}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Se cumplen la condicion de no negatividad
+Se cumple las restricciones de desigualdad
+    \end{Verbatim}
+
+    \hypertarget{ejercicio-2-3-puntos}{%
+\section{Ejercicio 2 (3 puntos)}\label{ejercicio-2-3-puntos}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Escriba el problema anterior en su forma estándar.
+\item
+  Construya los vectores \(\mathbf{b},\mathbf{c}\) y la matriz
+  \(\mathbf{A}\) y resuelva este problema con la librería.
+\item
+  Imprima un mensaje que indique si se encontró la solución, y en ese
+  caso imprima la solución, el valor de la función objetivo, las
+  variables de holgura y el error
+\end{enumerate}
+
+\[ \|\mathbf{A}\mathbf{x}-\mathbf{b}\|. \]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Calcule el error \(E_x\) como en el Ejercicio 1 y si \(E_x<\tau\)
+  imprima un mensaje de que se cumple la condición de no negatividad.
+\end{enumerate}
+
+\hypertarget{soluciuxf3n}{%
+\subsection{Solución:}\label{soluciuxf3n}}
+
+    En la Tarea 10 se nos proporciona la forma estándar considerando
+\(\mathbf{x}=(x_1,x_2,x_3,x_4,x_5,x_6)^T\), aquí las variables del
+problema son \(x_1\) y \(x_2\), las restantes son las variables de
+holgura.
+
+En este caso, consideramos \(\mathbf{c}=(-1,-1,0,0,0,0)^T\),
+\(\mathbf{b}=(2400,2100,45,5)\) y \[ 
+\mathbf{A}=\begin{pmatrix}
+50 & 24 & 1 & 0 & 0 & 0\\
+30 & 33 & 0 & 1 & 0 & 0\\
+1  &  0 & 0 & 0 &-1 & 0\\
+0  &  1 & 0 & 0 & 0 &-1
+\end{pmatrix}.
+\]
+
+Por lo tanto, el problema en forma estándar es \[ 
+\min_{\mathbf{x}} \mathbf{c}^T\mathbf{x}\quad\text{ sujeto a }\quad \mathbf{A}\mathbf{x}=\mathbf{b}\quad\text{ y }\quad \mathbf{x}\geq \mathbf{0}
+\]
+
+En forma estándar, el problema de programación lineal lo resolvemos
+utilizando los argumentos \texttt{A\_eq} y \texttt{b\_eq} de la función
+\texttt{linprog} de la librería \texttt{scipy}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{c} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0} \PY{p}{]}\PY{p}{)}
+\PY{n}{b} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{2400}\PY{p}{,} \PY{l+m+mi}{2100}\PY{p}{,} \PY{l+m+mi}{45}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)}
+\PY{n}{A} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{50}\PY{p}{,} \PY{l+m+mi}{24}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+              \PY{p}{[}\PY{l+m+mi}{30}\PY{p}{,} \PY{l+m+mi}{33}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+              \PY{p}{[} \PY{l+m+mi}{1}\PY{p}{,}  \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+              \PY{p}{[} \PY{l+m+mi}{0}\PY{p}{,}  \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]} \PY{p}{]}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Cotas de las variables}
+\PY{n}{bnd} \PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)}\PY{p}{,}  \PY{c+c1}{\PYZsh{} cotas para x1}
+       \PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)}\PY{p}{,}  \PY{c+c1}{\PYZsh{} cotas para x2}
+       \PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)}\PY{p}{,}  \PY{c+c1}{\PYZsh{} cotas para x3}
+       \PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)}\PY{p}{,}  \PY{c+c1}{\PYZsh{} cotas para x4}
+       \PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)}\PY{p}{,}  \PY{c+c1}{\PYZsh{} cotas para x5}
+       \PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)}\PY{p}{]}  \PY{c+c1}{\PYZsh{} cotas para x6}
+
+\PY{n}{opt\PYZus{}eq} \PY{o}{=} \PY{n}{linprog}\PY{p}{(}\PY{n}{c}\PY{o}{=}\PY{n}{c}\PY{p}{,} \PY{n}{A\PYZus{}eq}\PY{o}{=}\PY{n}{A}\PY{p}{,} \PY{n}{b\PYZus{}eq}\PY{o}{=}\PY{n}{b}\PY{p}{,} \PY{n}{bounds}\PY{o}{=}\PY{n}{bnd}\PY{p}{,}
+              \PY{n}{method}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{simplex}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Resultado del proceso:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}eq}\PY{o}{.}\PY{n}{message}\PY{p}{)}
+\PY{k}{if} \PY{n}{opt\PYZus{}eq}\PY{o}{.}\PY{n}{success}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Valor de la función objetivo:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}eq}\PY{o}{.}\PY{n}{fun}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Solución:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}eq}\PY{o}{.}\PY{n}{x}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{|Ax\PYZhy{}b|: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{opt\PYZus{}eq}\PY{o}{.}\PY{n}{con}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+Resultado del proceso: Optimization terminated successfully.
+Valor de la función objetivo: -51.25
+
+Solución:
+ [ 45.     6.25   0.   543.75   0.     1.25]
+
+|Ax-b|:  3.552713678800501e-15
+    \end{Verbatim}
+
+    Las variables de holgura, como previamente dijimos, son las coordenadas
+del vector solución correspondiente a las variables \(x_3,x_4,x_5,x_6\).
+
+    Finalmente, checamos la condición de no negatividad
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{positive\PYZus{}cond}\PY{p}{(}\PY{n}{tol}\PY{p}{,}\PY{n}{opt\PYZus{}eq}\PY{o}{.}\PY{n}{x}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Se cumplen la condicion de no negatividad
+    \end{Verbatim}
+
+    \hypertarget{ejercicio-3-4-puntos}{%
+\section{Ejercicio 3 (4 puntos)}\label{ejercicio-3-4-puntos}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Escriba el problema dual del Ejercicio 2.
+\item
+  Resuelva el problema dual con la librería. Esto debería devolver el
+  vector \(\lambda\) que son los multiplicadores de Lagrange de la
+  restricciones de igualdad del problema primal.
+\item
+  Imprima un mensaje que indique si se encontró la solución, y de ser
+  así, imprima \(\lambda\), el valor de la función objetivo y las
+  variables de holgura.
+\item
+  Usando el valor \(\mathbf{x}\) del Ejercicio 2, imprima el error
+  relativo
+\end{enumerate}
+
+\[\frac{|\mathbf{c}^\top\mathbf{x} - \mathbf{b}^\top\lambda|}
+{|\mathbf{c}^\top\mathbf{x}|}.\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Defina el vector \(\mathbf{s}\) como las variables de holgura.
+\item
+  Programe una función que reciba los vectores
+  \(\mathbf{b}, \mathbf{c}\), \(\mathbf{x}, \lambda, \mathbf{s}\), la
+  matriz \(\mathbf{A}\) y una tolerancia \(\tau\), y verique que se
+  cumplen las condiciones KKT:
+\end{enumerate}
+
+\[
+\begin{array}{rclc}
+  \mathbf{A}^\top \lambda + \mathbf{s} &=& \mathbf{c}, & (1) \\
+  \mathbf{A}\mathbf{x} &=& \mathbf{b}, & (2) \\
+  \mathbf{x} & \geq & \mathbf{0}, & (3)  \\
+  \mathbf{s} & \geq & \mathbf{0}, & (4)  \\
+  x_i s_i &=& 0, \qquad i=1,2,...,n. & (5)
+\end{array}
+\]
+
+Calcule los errores \(E_x\) y \(E_{s}\) como en el Ejercicio 1, para
+saber que tanto se violan las restricciones
+\(\mathbf{x}\geq \mathbf{0}\) y \(\mathbf{s}\geq \mathbf{0}\).
+
+La función debe imprimir - El error
+\(\|\mathbf{A}^\top \lambda + \mathbf{s}- \mathbf{c}\|\). - El
+error \(\|\mathbf{A}\mathbf{x} - \mathbf{b}\|\). - Si \(E_x<\tau\),
+imprima que se cumple las restricciones de no negatividad de
+\(\mathbf{x}\). - Si \(E_s<\tau\), imprima que se cumple las
+restricciones de no negatividad de \(\mathbf{s}\). - Calcule el valor de
+la suma \(\sum_i |x_i s_i|\) y si es menor que \(\tau\), imprima un
+mensaje que indique que se cumple la condición de complementariedad.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  Use la función anterior en el problema para reportar los resultados.
+\end{enumerate}
+
+\begin{quote}
+\textbf{Nota}: En el problema dual las variables en \(\lambda\) no
+tienen restricciones de cota. Si usa, por ejemplo, la función
+\texttt{linprog} para resolver el problema, ponga explícitamente que las
+cotas de las variables son \(-\infty\) e \(\infty\) para que la función
+no use las cotas que tiene fijas de manera predeterminada.
+\end{quote}
+
+\hypertarget{soluciuxf3n}{%
+\subsection{Solución:}\label{soluciuxf3n}}
+
+    El problema dual del problema primal en forma estándar descrito en el
+Ejercicio 2 es \[
+\min_{\lambda}-\mathbf{b}^T\lambda\quad\text{  sujeto a  }\quad \mathbf{A}^T\lambda\leq \mathbf{c},
+\]
+
+con \(\mathbf{A},\mathbf{b}\) y \(\mathbf{c}\) como en el Ejercicio 2.
+
+Utilizamos la función \texttt{linprog} con los argumentos
+correspondientes las restricciones de desigualdad del tipo \emph{menor o
+igual}. La solución al problema dual es la siguiente.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Coeficientes de la funcion objetivo}
+\PY{n}{c\PYZus{}dual} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{n}{b}
+
+\PY{c+c1}{\PYZsh{} Coeficientes del lado izquierdo de las desigualdades del tipo \PYZdq{}menor o igual a\PYZdq{}}
+\PY{n}{A\PYZus{}dual} \PY{o}{=} \PY{n}{A}\PY{o}{.}\PY{n}{T}
+
+\PY{c+c1}{\PYZsh{} Coeficientes del vector del lado derecho de las desigualdades del tipo \PYZdq{}menor o igual a\PYZdq{}}
+\PY{n}{b\PYZus{}dual} \PY{o}{=} \PY{n}{c}
+
+\PY{c+c1}{\PYZsh{} Cotas de las variables}
+\PY{n}{bnd} \PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)}\PY{p}{,}  \PY{c+c1}{\PYZsh{} cotas para lamb1}
+       \PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)}\PY{p}{,}  \PY{c+c1}{\PYZsh{} cotas para lamb2}
+       \PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)}\PY{p}{,}  \PY{c+c1}{\PYZsh{} cotas para lamb3}
+       \PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)}\PY{p}{]}  \PY{c+c1}{\PYZsh{} cotas para lamb4}
+
+\PY{n}{opt\PYZus{}dual} \PY{o}{=} \PY{n}{linprog}\PY{p}{(}\PY{n}{c}\PY{o}{=}\PY{n}{c\PYZus{}dual}\PY{p}{,} \PY{n}{A\PYZus{}ub}\PY{o}{=}\PY{n}{A\PYZus{}dual}\PY{p}{,} \PY{n}{b\PYZus{}ub}\PY{o}{=}\PY{n}{b\PYZus{}dual}\PY{p}{,} \PY{n}{bounds}\PY{o}{=}\PY{n}{bnd}\PY{p}{,}
+              \PY{n}{method}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{simplex}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Resultado del proceso:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{message}\PY{p}{)}
+\PY{k}{if} \PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{success}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Valor de la función objetivo:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{fun}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Solución:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{x}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Variables de holgura:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{slack}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+Resultado del proceso: Optimization terminated successfully.
+Valor de la función objetivo: 51.24999999999999
+Solución:
+ [-0.04166667  0.          1.08333333  0.        ]
+
+Variables de holgura:
+ [-4.44089210e-16  0.00000000e+00  4.16666667e-02  0.00000000e+00
+  1.08333333e+00  0.00000000e+00]
+    \end{Verbatim}
+
+    Que coincide con la vectores de multiplicadores de Lagrange \(\lambda\)
+y \(\mathbf{s}\), salvo por error numérico, que se obtuvieron en la Tarea 10 a partir de la
+solución del problema primal y las condiciones KKT.
+
+Por otro lado, por la relación existente entre el problema primal y su
+dual tienen el mismo valor para la función objetivo (considerando la
+función objetivo del problema dual correspondiente a una maximización).
+
+A continuación, mostramos el error relativo entre los valores óptimos
+hayados para el para el problema primal y el dual.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{lamb}\PY{o}{=}\PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{x}  \PY{c+c1}{\PYZsh{} Multiplicadores de Lagrange condiciones de igualdad.}
+\PY{n}{s}\PY{o}{=}\PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{slack} \PY{c+c1}{\PYZsh{} Variables de holgura}
+
+\PY{n}{rel\PYZus{}err}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{opt\PYZus{}eq}\PY{o}{.}\PY{n}{fun}\PY{o}{+}\PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{fun}\PY{p}{)}\PY{o}{/}\PY{n}{np}\PY{o}{.}\PY{n}{abs}\PY{p}{(}\PY{n}{opt\PYZus{}eq}\PY{o}{.}\PY{n}{fun}\PY{p}{)} \PY{c+c1}{\PYZsh{} Error relativo}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Error relativo entre las funciones objetivos del problema prima y dual es: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{rel\PYZus{}err}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Error relativo entre las funciones objetivos del problema prima y dual es:
+1.38642485026361e-16
+    \end{Verbatim}
+
+    Que es un valor pequeño y de hecho es más pequeño que la tolerancia
+\(\tau=\sqrt{\epsilon_m}\), por lo que podríamos afirmar que el valor
+óptimo de la función objetivo para el problema primal y dual es el
+mismo.
+
+    Finalmente, prograremos la función que verificará las condiciones KKT
+con la solución del problema obtenida y las variables duales óptimas.
+Esta función quedará definida en el módulo \texttt{lib\_t11} y llevará
+por nombre \texttt{KKT\_cond}.
+
+Usamos esta última función para obtener los resultados solicitados
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{KKT\PYZus{}cond}\PY{p}{(}\PY{n}{tol}\PY{p}{,}\PY{n}{b}\PY{p}{,}\PY{n}{c}\PY{p}{,}\PY{n}{opt\PYZus{}eq}\PY{o}{.}\PY{n}{x}\PY{p}{,}\PY{n}{lamb}\PY{p}{,}\PY{n}{s}\PY{p}{,}\PY{n}{A}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Condicion 1: |AT*lamb+s-c| = 0.0
+Condicion 2: |Ax-b| =  3.552713678800501e-15
+SI se cumple la condicion de no negatividad de x
+SI se cumple la condicion de no negatividad de s
+SI se cumple la condicion de complentariedad
+    \end{Verbatim}
+
+    De los resultados anterior concluimos que los valores hallados para el
+problema primal como el dual son óptimos de sus respectivos contextos.
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

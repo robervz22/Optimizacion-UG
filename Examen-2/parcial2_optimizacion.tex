@@ -1,0 +1,1326 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{parcial2\_optimizacion}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+\title{Examen Parcial 2 Optimización}
+\author{Roberto Vásquez Martínez \\ Profesor: Joaquín Peña Acevedo}
+\date{25/Mayo/2022}
+\maketitle 
+    
+    
+
+    
+    \hypertarget{curso-de-optimizaciuxf3n-demat}{%
+\section{Curso de Optimización
+(DEMAT)}\label{curso-de-optimizaciuxf3n-demat}}
+
+\hypertarget{parcial-2}{%
+\subsection{Parcial 2}\label{parcial-2}}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Descripción: & Fechas \\
+\midrule
+\endhead
+Fecha de publicación del documento: & \textbf{Mayo 25, 2022} \\
+Hora de inicio: & \textbf{15:00} \\
+Hora límite de entrega: & \textbf{18:00} \\
+\bottomrule
+\end{longtable}
+
+\hypertarget{indicaciones}{%
+\subsubsection{Indicaciones}\label{indicaciones}}
+
+Lea con cuidado los ejercicios.
+
+Puede usar las notas de clase y las tareas hechas para resolver el
+examen.
+
+Al final, entregue el notebook con sus respuestas, junto con los códigos
+que hagan falta para reproducir los resultados. Si es más de un archivo,
+genere un archivo ZIP que contenga el notebook y los scripts
+adicionales.
+
+A partir del notebook genere un archivo PDF con las respuestas y envíelo
+por separado antes de la hora límite.
+
+    \hypertarget{ejercicio-1.-5-puntos}{%
+\subsection{Ejercicio 1. (5 puntos)}\label{ejercicio-1.-5-puntos}}
+
+Sea
+
+\[ f(\mathbf{x}) = f(x_1, x_2) = 2x_1^{2} + x_2^{2} - x_1 x_2 - 6.5x_1  + 2.5x_2. \]
+
+Considere el problema
+
+\%
+\[ \min\; f(\mathbf{x}) \quad \text{sujeto a} \quad -1\leq x_1 \leq 1, \; -1\leq x_2 \leq 1.\]
+
+Encontrar la solución usando un método de barrera logarítmica (Clase
+25).
+
+Para esto construimos la función barrera logarítmica
+
+\[
+b_{log}(\mathbf{x}; \mu) = f(x_1,x_2) + \frac{1}{\mu}(-log(1-x_1)-log(1-x_2)-log(1+x_1)-log(1+x_2) )
+\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Programar las funciones y sus gradientes
+\end{enumerate}
+
+\[f(\mathbf{x}) \quad \text{y} \quad b_{log}(\mathbf{x}; \mu) \]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Programar el método de barrera logarítmica:
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\item
+  Dar un punto inicial \(\mathbf{x}_0\), la función
+  \(b_{log}(\mathbf{x}; \mu)\), su gradiente, \(\mu_0\), una tolerancia
+  \(\tau>0\) y los parámetros que se necesiten para usar el método BFGS.
+\item
+  Hacer \(k=0\) y repetir los siguientes pasos:
+\end{enumerate}
+
+b1) Usando el método BFGS, calcular el mínimo \(\mathbf{x}_{k+1}\) de
+\(b_{log}(\mathbf{x}; \mu_k)\). Para el método BFGS use la tolerancia
+\(\epsilon_m^{1/4}\) porque no necesitamos tener demasiada precisión en
+el cálculo. Además, para el algoritmo de backtracking use
+\(\alpha_{ini}=1\), para reducir la posibilidad de evaluar la función de
+barrera en puntos que están fuera de la región factible.
+
+b2) Imprimir si el algoritmo BFGS encuentra la solución, y en ese caso
+imprimir
+
+\begin{itemize}
+\tightlist
+\item
+  el entero \(k\)
+\item
+  el valor \(\mu_k\),
+\item
+  el número de iteraciones que realizó el algoritmo BFGS,
+\item
+  el punto \(\mathbf{x}_{k+1}\) y
+\item
+  el valor \(f(\mathbf{x}_{k+1})\).
+\end{itemize}
+
+b3) Si \(\|\mathbf{x}_{k+1} - \mathbf{x}_k\|<\tau\), terminar
+devolviendo \(\mathbf{x}_{k+1}\)
+
+b4) En caso contrario, hacer \(\mu_{k+1} = 10\mu_k\), \(k=k+1\) y volver
+al paso (b1)
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\item
+  Probar el algoritmo usando \(\mathbf{x}_0 = (-0.75, 0.5)\),
+  \(\mu_0=1\) y \(\tau=0.001\).
+\item
+  Si \((x_1^{k}, x_2^k)\) es el punto que devuelve el algoritmo de
+  barrera logarítmica y si está en frontera, genere la gráfica de la
+  función evaluándola en puntos sobre la arista en donde está punto para
+  visualmente verificar que tiene sentido el resultado.
+\end{enumerate}
+
+\hypertarget{soluciuxf3n}{%
+\subsubsection{Solución:}\label{soluciuxf3n}}
+
+    A continuación probamos el algoritmo con un número de iteraciones máximo
+de \(1000\) para el método de barrera y \(50000\) para el BFGS,
+utilizando las tolerancias correspondientes.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{importlib}
+
+\PY{c+c1}{\PYZsh{} Tolerancia y numero maximo de iteraciones BFGS}
+\PY{n}{tol\PYZus{}BFGS}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{eps}\PY{o}{*}\PY{o}{*}\PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{4}\PY{p}{)}
+\PY{n}{N\PYZus{}BFGS}\PY{o}{=}\PY{l+m+mi}{5000}
+\PY{n}{rho}\PY{o}{=}\PY{l+m+mf}{0.1}
+
+\PY{c+c1}{\PYZsh{} Tolerancia y numero de iteraciones BARRERA}
+\PY{n}{tol\PYZus{}BARRERA}\PY{o}{=}\PY{l+m+mf}{0.001}
+\PY{n}{N\PYZus{}BARRERA}\PY{o}{=}\PY{l+m+mi}{1000}
+\PY{n}{x0}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mf}{0.75}\PY{p}{,}\PY{l+m+mf}{0.5}\PY{p}{]}\PY{p}{)}
+\PY{n}{mu0}\PY{o}{=}\PY{l+m+mf}{0.1}
+
+\PY{k+kn}{import} \PY{n+nn}{lib\PYZus{}examen\PYZus{}2}
+\PY{n}{importlib}\PY{o}{.}\PY{n}{reload}\PY{p}{(}\PY{n}{lib\PYZus{}examen\PYZus{}2}\PY{p}{)}
+\PY{k+kn}{from} \PY{n+nn}{lib\PYZus{}examen\PYZus{}2} \PY{k+kn}{import} \PY{o}{*}
+
+\PY{c+c1}{\PYZsh{} Prueba}
+\PY{n}{xk}\PY{o}{=}\PY{n}{proof\PYZus{}barrera}\PY{p}{(}\PY{n}{barrera\PYZus{}f}\PY{p}{,}\PY{n}{grad\PYZus{}barrera\PYZus{}f}\PY{p}{,}\PY{n}{x0}\PY{p}{,}\PY{n}{mu0}\PY{p}{,}\PY{n}{N\PYZus{}BARRERA}\PY{p}{,}\PY{n}{N\PYZus{}BFGS}\PY{p}{,}\PY{n}{tol\PYZus{}BARRERA}\PY{p}{,}\PY{n}{tol\PYZus{}BFGS}\PY{p}{,}\PY{n}{rho}\PY{p}{,}\PY{n}{eje1\PYZus{}f}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+k =  6
+mu\_k =  100000.0
+iteraciones BFGS =  30
+xk =  [[ 0.99999429]
+ [-0.7499858 ]]
+fk =  [-5.06249]
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/home/roberto/Documentos/DEMAT/10mo Semestre/Materias/Optimización/Examen
+Parcial 2/lib\_examen\_2.py:19: RuntimeWarning: invalid value encountered in log
+  aux=-(np.log(1.0-x\_squeezed[0])+np.log(1.0+x\_squeezed[0])+np.log(1.0-x\_squeeze
+d[1])+np.log(1.0+x\_squeezed[1]))
+    \end{Verbatim}
+
+    Finalmente, evaluamos en la arista a la función \(f\)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{warnings}
+\PY{n}{warnings}\PY{o}{.}\PY{n}{filterwarnings}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ignore}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+
+\PY{k}{def} \PY{n+nf}{profile\PYZus{}f}\PY{p}{(}\PY{n}{x2}\PY{p}{)}\PY{p}{:}
+    \PY{n}{vec}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mf}{1.0}\PY{p}{,}\PY{n}{x2}\PY{p}{]}\PY{p}{)}
+    \PY{k}{return} \PY{n}{eje1\PYZus{}f}\PY{p}{(}\PY{n}{vec}\PY{p}{)}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{n}{x2\PYZus{}linspace}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.0}\PY{p}{,}\PY{l+m+mf}{1.0}\PY{p}{,}\PY{l+m+mi}{100}\PY{p}{)}
+\PY{n}{profile\PYZus{}f\PYZus{}x2\PYZus{}linspace}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{n}{profile\PYZus{}f}\PY{p}{(}\PY{n}{x2}\PY{p}{)} \PY{k}{for} \PY{n}{x2} \PY{o+ow}{in} \PY{n}{x2\PYZus{}linspace}\PY{p}{]}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x2\PYZus{}linspace}\PY{p}{,}\PY{n}{profile\PYZus{}f\PYZus{}x2\PYZus{}linspace}\PY{p}{,}\PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{fk}\PY{o}{=}\PY{n}{profile\PYZus{}f}\PY{p}{(}\PY{n}{xk}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{xk}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{fk}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{o}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+<matplotlib.collections.PathCollection at 0x7f6eb3ab1730>
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{parcial2_optimizacion_files/parcial2_optimizacion_5_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    De lo que podemos observar que al menos el punto hallado
+\(\mathbf{x}^\ast\), cerca de la frontera, es un mínimo local de la
+función \(f\) considerando al menos la sección de la función
+correspondiente a la arista de la región factible.
+
+    \hypertarget{ejercicio-2.-5-puntos}{%
+\subsection{Ejercicio 2. (5 puntos)}\label{ejercicio-2.-5-puntos}}
+
+Consideremos la función \(f(z; x_1, ..., x_{rs})\) definida por una
+combinación lineal de funciones trigonométricas:
+
+\[
+\begin{array}{rcl}
+f(z; x_1, ...,  x_{rs}) &=&
+x_1 \sin(\omega_1 z + \phi_1) + ... + x_{r} \sin(\omega_1 z + \phi_r)\\
+& & + x_{r+1} \sin(\omega_2 z + \phi_1) + ... + x_{2r} \sin(\omega_2 z + \phi_r) \\
+& & + ... \\
+& & + x_{r(s-1)+1} \sin(\omega_{s}  z + \phi_1) + ... + x_{rs} \sin(\omega_{s} z + \phi_r)
+\end{array}
+\]
+
+Para \$ x\_1, \ldots, x\_\{rs\}\$ fijos y unos puntos
+\(z_1, z_2, ..., z_m\) datos, calculamos
+\(b_i = f(z_i; x_1, ..., x_{rs})\) para \(i=1,2,...,m\). Es decir, si
+construimos la matriz
+
+\[
+\left(
+\begin{array}{l}
+b_1 \\ b_2 \\ \vdots \\ b_m
+\end{array}
+\right)
+=
+\left[
+\begin{array}{rrrrrr}
+ \sin(\omega_1 z_1 + \phi_1) & \cdots & \sin(\omega_1 z_1 + \phi_r) & \sin(\omega_2 z_1 + \phi_1) &\cdots & \sin(\omega_{s} z_1 + \phi_r) \\
+ \sin(\omega_1 z_2 + \phi_1) & \cdots & \sin(\omega_1 z_2 + \phi_r) & \sin(\omega_2 z_2 + \phi_1) &\cdots & \sin(\omega_{s} z_2 + \phi_r) \\
+ \vdots                      & \cdots & \vdots                      & \vdots                      &\cdots & \vdots \\
+ \sin(\omega_1 z_m + \phi_1) & \cdots & \sin(\omega_1 z_m + \phi_r) & \sin(\omega_2 z_m + \phi_1) &\cdots & \sin(\omega_{s} z_m + \phi_r) 
+\end{array}
+\right]
+\left(
+\begin{array}{l}
+x_1 \\ x_2 \\ \vdots \\ x_{rs}
+\end{array}
+\right)
+\]
+
+Es decir,
+
+\[ \mathbf{b} = \mathbf{A} \mathbf{x} \]
+
+El siguiente código contruye la matriz \(\mathbf{A}\), propone un vector
+\(\mathbf{x}_{real}\) y genera el vector\\
+\(\mathbf{b} = \mathbf{A} \mathbf{x}_{real}\).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+
+\PY{c+c1}{\PYZsh{} Evalua cada función trigonométrica. }
+\PY{k}{def} \PY{n+nf}{fnctrig}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{fparam}\PY{p}{)}\PY{p}{:}
+    \PY{n}{omega} \PY{o}{=} \PY{n}{fparam}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{omega}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{phi}   \PY{o}{=} \PY{n}{fparam}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{phi}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{sin}\PY{p}{(}\PY{n}{omega}\PY{o}{*}\PY{n}{x} \PY{o}{+} \PY{n}{phi}\PY{p}{)}
+
+\PY{n}{m}    \PY{o}{=} \PY{l+m+mi}{15}   \PY{c+c1}{\PYZsh{} Número de puntos z\PYZus{}i}
+\PY{n}{r}    \PY{o}{=} \PY{l+m+mi}{10}   \PY{c+c1}{\PYZsh{} Número de angulos phi}
+\PY{n}{s}    \PY{o}{=} \PY{l+m+mi}{20}   \PY{c+c1}{\PYZsh{} Número de frecuencias omega}
+
+\PY{n}{z}     \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{9}\PY{p}{,} \PY{n}{m}\PY{p}{)}
+\PY{n}{phi}   \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{pi}\PY{p}{,} \PY{n}{r}\PY{p}{)}
+\PY{n}{omega} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mf}{0.5}\PY{p}{,} \PY{l+m+mf}{2.0}\PY{p}{,} \PY{n}{s}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vector de frecuencias omega:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{omega}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Vector de ángulos de fase phi:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{phi}\PY{p}{)}
+
+\PY{n}{n}  \PY{o}{=} \PY{n}{r}\PY{o}{*}\PY{n}{s}
+
+\PY{c+c1}{\PYZsh{} Se crea la matriz A }
+\PY{n}{A}  \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{m}\PY{p}{,} \PY{n}{n}\PY{p}{)}\PY{p}{)}
+\PY{k}{for} \PY{n}{i}\PY{p}{,}\PY{n}{z\PYZus{}i} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{z}\PY{p}{)}\PY{p}{:}
+    \PY{n}{mc} \PY{o}{=} \PY{l+m+mi}{0}
+    \PY{k}{for} \PY{n}{j}\PY{p}{,}\PY{n}{phi\PYZus{}j} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{phi}\PY{p}{)}\PY{p}{:}
+        \PY{k}{for} \PY{n}{l}\PY{p}{,}\PY{n}{omega\PYZus{}l} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{omega}\PY{p}{)}\PY{p}{:}
+            \PY{n}{fparam}   \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{omega}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{n}{omega\PYZus{}l}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{phi}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{n}{phi\PYZus{}j}\PY{p}{\PYZcb{}}
+            \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{mc}\PY{p}{]} \PY{o}{=} \PY{n}{fnctrig}\PY{p}{(}\PY{n}{z\PYZus{}i}\PY{p}{,} \PY{n}{fparam}\PY{p}{)}
+            \PY{n}{mc} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+\PY{n}{x\PYZus{}real} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{n}{n}\PY{p}{)}
+\PY{n}{nc} \PY{o}{=} \PY{l+m+mi}{1} 
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{:}
+    \PY{k}{if} \PY{n}{i}\PY{o}{\PYZpc{}}\PY{k}{r}==3 and (i//s)\PYZpc{}2==0:
+        \PY{n}{x\PYZus{}real}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{n}{nc}
+        \PY{n}{nc}  \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+\PY{n}{b}  \PY{o}{=} \PY{n}{A} \PY{o}{@} \PY{n}{x\PYZus{}real}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Dimensiones de la matriz A:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{A}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{bar}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{squeeze}\PY{p}{(}\PY{n}{x\PYZus{}real}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Índice i}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}x\PYZus{}i\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Componentes del vector \PYZdl{}x\PYZus{}}\PY{l+s+si}{\PYZob{}real\PYZcb{}}\PY{l+s+s1}{\PYZdl{} que genera los datos}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{14}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{m}\PY{p}{)}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linewidth}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Índice i}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}b\PYZus{}i\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{\PYZus{}}\PY{o}{=}\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Datos generados \PYZdl{}b\PYZus{}i\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{14}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Vector de frecuencias omega:
+ [0.5        0.57894737 0.65789474 0.73684211 0.81578947 0.89473684
+ 0.97368421 1.05263158 1.13157895 1.21052632 1.28947368 1.36842105
+ 1.44736842 1.52631579 1.60526316 1.68421053 1.76315789 1.84210526
+ 1.92105263 2.        ]
+
+Vector de ángulos de fase phi:
+ [0.         0.34906585 0.6981317  1.04719755 1.3962634  1.74532925
+ 2.0943951  2.44346095 2.7925268  3.14159265]
+
+Dimensiones de la matriz A: (15, 200)
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{parcial2_optimizacion_files/parcial2_optimizacion_8_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{parcial2_optimizacion_files/parcial2_optimizacion_8_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Dados la matriz \(\mathbf{A}\) y el vector \(\mathbf{b}\), queremos
+calcular un vector \(\mathbf{x}\) tal que
+
+\[ \mathbf{b} = \mathbf{A} \mathbf{x}. \]
+
+Como \(\mathbf{A}\) es de tamaño \(m \times n\), con \(m<n\), no se
+puede resolver el sistema de ecuaciones o aplicar el método de mínimos
+cuadrados.
+
+Como hay es un sistema subdeterminado, puede haber una infinidad de
+soluciones Una manera obtener un vector \(\mathbf{x}\) se seleccionar
+aquel que satisface el sistema y tiene norma mínima (para que no ocurra
+como en las soluciones de mínimos cuadrados en los que las componentes
+toman valores en el orden de decenas de miles mientras que el
+componentes de \(\mathbf{b}\) están en orden de unidades). Así se puede
+plantear el problema
+
+\[  \min \|\mathbf{x}\|_2 \quad \text{sujeto a} \quad \mathbf{A} \mathbf{x} = \mathbf{b}. \]
+
+Se puede ver que la solución de este problema está dada por (medio punto
+adicional si hacen la deducción)
+
+\[ \mathbf{x}_{mn2} = \mathbf{A}^\top(\mathbf{A}\mathbf{A}^\top)^{-1} \mathbf{b}.\]
+
+El problema es que esta solución no es rala, es decir, que la mayoría de
+sus componentes son cero, tal como el vector \(\mathbf{x}_{real}\) que
+generó los datos \(\mathbf{b}\).
+
+El método ``basis pursuit'' propone calcular calcular \(\mathbf{x}\)
+resolviendo el problema
+
+\[  \min \|\mathbf{x}\|_1 \quad \text{sujeto a} \quad \mathbf{A} \mathbf{x} = \mathbf{b}. \]
+
+Al minimizar la suma de valores absolutos de las variables \(x_i\), se
+espera que la mayoría de éstas se hagan cero para reducir la suma, en
+especial si usamos un método como el método simplex que calcula
+soluciones básicas factibles (todas la variables no básicas son cero).
+
+Este problema lo podemos plantear como un problema de programación
+lineal, expresando el vector \(\mathbf{x}\) como la resta de dos nuevos
+vectores de variables \(\mathbf{u}\) y \(\mathbf{v}\) no negativos:
+
+\[ \mathbf{x} = \mathbf{u} - \mathbf{v}.\]
+
+Así, se plantea el problema de programación lineal
+
+\[  \min \; 
+\mathbf{c}^\top 
+\left(
+\begin{array}{l}
+\mathbf{u}  \\ \mathbf{v}
+\end{array}
+\right)
+\quad \text{sujeto a} \quad 
+[\mathbf{A}\;\; -\mathbf{A}] 
+\left(
+\begin{array}{l}
+\mathbf{u}  \\ \mathbf{v}
+\end{array}
+\right)
+= \mathbf{b}, \quad (\mathbf{u}, \mathbf{v}) \geq  \mathbf{0}, \]
+
+donde \(\mathbf{c}\) es el vector con todas sus componentes iguales a 1.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Calcule la solución de mínima norma 2,
+\end{enumerate}
+
+\[ \mathbf{x}_{mn2}. \]
+
+\begin{itemize}
+\tightlist
+\item
+  Imprima el valor del error \(\|\mathbf{A} \mathbf{x}-\mathbf{b}\|\)
+\item
+  Grafique las entradas del vector mínima norma 2 para que pueda
+  constatar que no es vector ralo y que no tiene parecido con
+  \(\mathbf{x}_{real}\).
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Resuelva el problema de programación lineal con alguna librería de
+  Python.
+\item
+  Construya y resuelva el problema dual para obtener el vector
+  \(\lambda\) y defina \(\mathbf{s}\) como las variables de holgura del
+  problema dual.
+\item
+  Verique si se cumplen las condiciones KKT para la variable primal
+  \((\mathbf{u}, \mathbf{v})\) y las variables duales
+  \((\lambda, \mathbf{s})\) (pueden que no se cumplan si la librería
+  envió warnings sobre el mal condicionamiento de una matriz).
+\item
+  Imprima y compare los valores de la función objetivo del problema
+  primal y del problema dual.
+\item
+  Calcule \(\mathbf{x} = \mathbf{u} - \mathbf{v}\). Imprima el error
+  \(\|\mathbf{A} \mathbf{x}-\mathbf{b}\|\) y grafique las entradas del
+  vector \(\mathbf{x}\). Comparado con la gráfica de
+  \(\mathbf{x}_{real}\), describa las similutudes o diferencias, y si
+  menos se cumple que es un vector ralo, que era el propósito original
+  de cambiar la norma 2 por la norma 1 en la función objetivo del
+  problema.
+\item
+  Repita los pasos 2 al 6, cambiando \(m=50\). Vuelva a ejecutar el
+  código que genera a la matriz \(\mathbf{A}\) y al vector
+  \(\mathbf{b}\). Describa si hay algún cambio en los resultados por el
+  hecho de tener más ecuaciones.
+\end{enumerate}
+
+\hypertarget{soluciuxf3n}{%
+\subsubsection{Solución:}\label{soluciuxf3n}}
+
+    En primer lugar, calculamos la solución al problema de minimización con
+la norma 2 utilizando la fórmula proporcionada, este vector lo denotamos
+por \(\mathbf{x}^\ast_2\)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Norma 2}
+\PY{n}{x\PYZus{}2norm}\PY{o}{=}\PY{n}{A}\PY{o}{.}\PY{n}{T}\PY{n+nd}{@np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{inv}\PY{p}{(}\PY{n}{A}\PY{n+nd}{@A}\PY{o}{.}\PY{n}{T}\PY{p}{)}\PY{n+nd}{@b}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{|Ax\PYZhy{}b| = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{A}\PY{n+nd}{@x\PYZus{}2norm}\PY{o}{\PYZhy{}}\PY{n}{b}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+|Ax-b| =  0.0012767576284011112
+    \end{Verbatim}
+
+    Hacemos la gráfica de las componentes de \(\mathbf{x}^\ast_2\)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{bar}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{squeeze}\PY{p}{(}\PY{n}{x\PYZus{}2norm}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Índice i}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}x\PYZus{}i\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Componentes del vector \PYZdl{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{mathbf}\PY{l+s+si}{\PYZob{}x\PYZcb{}}\PY{l+s+s1}{\PYZca{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{ast\PYZus{}2\PYZdl{} que genera los datos}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{14}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0.5, 1.0, 'Componentes del vector \$\textbackslash{}\textbackslash{}mathbf\{x\}\^{}\textbackslash{}\textbackslash{}ast\_2\$ que genera los
+datos')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{parcial2_optimizacion_files/parcial2_optimizacion_13_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Y claramente no es igual al vector \(\mathbf{x}_{\mathrm{real}}\)
+propuesto.
+
+    Ahora, resolvemos el problema de programación lineal primal
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{optimize} \PY{k+kn}{import} \PY{n}{linprog}
+\PY{k+kn}{import} \PY{n+nn}{scipy}
+
+\PY{n}{c} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{ones}\PY{p}{(}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{n}\PY{p}{)}
+\PY{n}{A\PYZus{}primal}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{n}{A}\PY{p}{)}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Cotas de las variables}
+\PY{n}{bnd} \PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{n}\PY{p}{)}\PY{p}{]}
+
+\PY{n}{opt\PYZus{}primal} \PY{o}{=} \PY{n}{linprog}\PY{p}{(}\PY{n}{c}\PY{o}{=}\PY{n}{c}\PY{p}{,} \PY{n}{A\PYZus{}eq}\PY{o}{=}\PY{n}{A\PYZus{}primal}\PY{p}{,} \PY{n}{b\PYZus{}eq}\PY{o}{=}\PY{n}{b}\PY{p}{,} \PY{n}{bounds}\PY{o}{=}\PY{n}{bnd}\PY{p}{,}
+              \PY{n}{method}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{simplex}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Resultado del proceso:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}primal}\PY{o}{.}\PY{n}{message}\PY{p}{)}
+\PY{k}{if} \PY{n}{opt\PYZus{}primal}\PY{o}{.}\PY{n}{success}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Valor de la función objetivo:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}primal}\PY{o}{.}\PY{n}{fun}\PY{p}{)}
+    \PY{n}{x\PYZus{}1norm}\PY{o}{=}\PY{n}{opt\PYZus{}primal}\PY{o}{.}\PY{n}{x}
+    
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+Resultado del proceso: Optimization terminated successfully.
+Valor de la función objetivo: 5.758770483774055
+    \end{Verbatim}
+
+    Posteriormente, resolvemos el problema dual, en este caso consideramos
+el problema de \(\min -\mathbf{b}^T\lambda\)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Coeficientes de la funcion objetivo}
+\PY{n}{c\PYZus{}dual} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{n}{b}
+
+\PY{c+c1}{\PYZsh{} Coeficientes del lado izquierdo de las desigualdades del tipo \PYZdq{}menor o igual a\PYZdq{}}
+\PY{n}{A\PYZus{}dual} \PY{o}{=} \PY{n}{A\PYZus{}primal}\PY{o}{.}\PY{n}{T}
+
+\PY{c+c1}{\PYZsh{} Coeficientes del vector del lado derecho de las desigualdades del tipo \PYZdq{}menor o igual a\PYZdq{}}
+\PY{n}{b\PYZus{}dual} \PY{o}{=} \PY{n}{c}
+
+\PY{c+c1}{\PYZsh{} Cotas para las variables}
+\PY{n}{bnd} \PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{m}\PY{p}{)}\PY{p}{]}
+
+
+\PY{n}{opt\PYZus{}dual} \PY{o}{=} \PY{n}{linprog}\PY{p}{(}\PY{n}{c}\PY{o}{=}\PY{n}{c\PYZus{}dual}\PY{p}{,} \PY{n}{A\PYZus{}ub}\PY{o}{=}\PY{n}{A\PYZus{}dual}\PY{p}{,} \PY{n}{b\PYZus{}ub}\PY{o}{=}\PY{n}{b\PYZus{}dual}\PY{p}{,} \PY{n}{bounds}\PY{o}{=}\PY{n}{bnd}\PY{p}{,}
+              \PY{n}{method}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{interior\PYZhy{}point}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Resultado del proceso:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{message}\PY{p}{)}
+\PY{k}{if} \PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{success}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Valor de la función objetivo:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{fun}\PY{p}{)}
+    \PY{n}{lamb}\PY{o}{=}\PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{x}
+    \PY{n}{slack}\PY{o}{=}\PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{slack}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+Resultado del proceso: Optimization terminated successfully.
+Valor de la función objetivo: -5.75877048293428
+    \end{Verbatim}
+
+    Por lo que \(\max \mathbf{b}^T\lambda=\min\mathbf{c}^T\mathbf{x}\), que
+es lo que pasa en dualidad fuerte.
+
+    A continuación, verificamos las condiciones de KKT con un tolerancia
+\(\tau=\sqrt{\epsilon_m}\)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{importlib}\PY{o}{.}\PY{n}{reload}\PY{p}{(}\PY{n}{lib\PYZus{}examen\PYZus{}2}\PY{p}{)}
+\PY{k+kn}{from} \PY{n+nn}{lib\PYZus{}examen\PYZus{}2} \PY{k+kn}{import} \PY{o}{*}
+
+\PY{n}{tol\PYZus{}KKT}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{eps}\PY{o}{*}\PY{o}{*}\PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{KKT\PYZus{}cond}\PY{p}{(}\PY{n}{tol\PYZus{}KKT}\PY{p}{,}\PY{n}{b}\PY{p}{,}\PY{n}{c}\PY{p}{,}\PY{n}{x\PYZus{}1norm}\PY{p}{,}\PY{n}{lamb}\PY{p}{,}\PY{n}{slack}\PY{p}{,}\PY{n}{A\PYZus{}primal}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Condicion 1: |AT*lamb+s-c| = 3.8459253727671276e-16
+Condicion 2: |Ax-b| =  1.1050046463299629e-14
+SI se cumple la condicion de no negatividad de x
+SI se cumple la condicion de no negatividad de s
+SI se cumple la condicion de complentariedad
+    \end{Verbatim}
+
+    Finalmente hayamos el \(\mathbf{x}^\ast_1\), que es el vector solución
+en el problema con la norma \(1\), con el problema de programación
+lineal hemos obtenido tanto su parte posivia como negativa.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x\PYZus{}1norm\PYZus{}pos\PYZus{}part}\PY{o}{=}\PY{n}{x\PYZus{}1norm}\PY{p}{[}\PY{p}{:}\PY{n}{n}\PY{p}{]}
+\PY{n}{x\PYZus{}1norm\PYZus{}neg\PYZus{}part}\PY{o}{=}\PY{n}{x\PYZus{}1norm}\PY{p}{[}\PY{n}{n}\PY{p}{:}\PY{p}{]}
+\PY{n}{x\PYZus{}1norm\PYZus{}gen}\PY{o}{=}\PY{n}{x\PYZus{}1norm\PYZus{}pos\PYZus{}part}\PY{o}{\PYZhy{}}\PY{n}{x\PYZus{}1norm\PYZus{}neg\PYZus{}part}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{|Ax\PYZhy{}b| = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{A}\PY{n+nd}{@x\PYZus{}1norm\PYZus{}gen}\PY{o}{\PYZhy{}}\PY{n}{b}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+|Ax-b| =  1.1219401770546083e-14
+    \end{Verbatim}
+
+    La gráfica de los componentes de \(\mathbf{x}^\ast_1\) es
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{bar}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{squeeze}\PY{p}{(}\PY{n}{x\PYZus{}1norm\PYZus{}gen}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Índice i}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}x\PYZus{}i\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Componentes del vector \PYZdl{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{mathbf}\PY{l+s+si}{\PYZob{}x\PYZcb{}}\PY{l+s+s1}{\PYZca{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{ast\PYZus{}1\PYZdl{} que genera los datos}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{14}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0.5, 1.0, 'Componentes del vector \$\textbackslash{}\textbackslash{}mathbf\{x\}\^{}\textbackslash{}\textbackslash{}ast\_1\$ que genera los
+datos')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{parcial2_optimizacion_files/parcial2_optimizacion_25_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Evidentemente este vector es mucho más ralo que el real, lo que sugiere
+un modelo más simple aunque los datos fueron generados por un modelo más
+complejo.
+
+    \hypertarget{caso-m50}{%
+\paragraph{\texorpdfstring{Caso \(m=50\)}{Caso m=50}}\label{caso-m50}}
+
+    Ahora replicamos los pasos, aumentando el número de ecuaciones
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+
+\PY{c+c1}{\PYZsh{} Evalua cada función trigonométrica. }
+\PY{k}{def} \PY{n+nf}{fnctrig}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{fparam}\PY{p}{)}\PY{p}{:}
+    \PY{n}{omega} \PY{o}{=} \PY{n}{fparam}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{omega}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n}{phi}   \PY{o}{=} \PY{n}{fparam}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{phi}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{sin}\PY{p}{(}\PY{n}{omega}\PY{o}{*}\PY{n}{x} \PY{o}{+} \PY{n}{phi}\PY{p}{)}
+
+\PY{n}{m}    \PY{o}{=} \PY{l+m+mi}{50}   \PY{c+c1}{\PYZsh{} Número de puntos z\PYZus{}i}
+\PY{n}{r}    \PY{o}{=} \PY{l+m+mi}{10}   \PY{c+c1}{\PYZsh{} Número de angulos phi}
+\PY{n}{s}    \PY{o}{=} \PY{l+m+mi}{20}   \PY{c+c1}{\PYZsh{} Número de frecuencias omega}
+
+\PY{n}{z}     \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{9}\PY{p}{,} \PY{n}{m}\PY{p}{)}
+\PY{n}{phi}   \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{pi}\PY{p}{,} \PY{n}{r}\PY{p}{)}
+\PY{n}{omega} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mf}{0.5}\PY{p}{,} \PY{l+m+mf}{2.0}\PY{p}{,} \PY{n}{s}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Vector de frecuencias omega:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{omega}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Vector de ángulos de fase phi:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{phi}\PY{p}{)}
+
+\PY{n}{n}  \PY{o}{=} \PY{n}{r}\PY{o}{*}\PY{n}{s}
+
+\PY{c+c1}{\PYZsh{} Se crea la matriz A }
+\PY{n}{A}  \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{m}\PY{p}{,} \PY{n}{n}\PY{p}{)}\PY{p}{)}
+\PY{k}{for} \PY{n}{i}\PY{p}{,}\PY{n}{z\PYZus{}i} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{z}\PY{p}{)}\PY{p}{:}
+    \PY{n}{mc} \PY{o}{=} \PY{l+m+mi}{0}
+    \PY{k}{for} \PY{n}{j}\PY{p}{,}\PY{n}{phi\PYZus{}j} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{phi}\PY{p}{)}\PY{p}{:}
+        \PY{k}{for} \PY{n}{l}\PY{p}{,}\PY{n}{omega\PYZus{}l} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{omega}\PY{p}{)}\PY{p}{:}
+            \PY{n}{fparam}   \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{omega}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{n}{omega\PYZus{}l}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{phi}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{n}{phi\PYZus{}j}\PY{p}{\PYZcb{}}
+            \PY{n}{A}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{n}{mc}\PY{p}{]} \PY{o}{=} \PY{n}{fnctrig}\PY{p}{(}\PY{n}{z\PYZus{}i}\PY{p}{,} \PY{n}{fparam}\PY{p}{)}
+            \PY{n}{mc} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+\PY{n}{x\PYZus{}real} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{n}{n}\PY{p}{)}
+\PY{n}{nc} \PY{o}{=} \PY{l+m+mi}{1} 
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{:}
+    \PY{k}{if} \PY{n}{i}\PY{o}{\PYZpc{}}\PY{k}{r}==3 and (i//s)\PYZpc{}2==0:
+        \PY{n}{x\PYZus{}real}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{n}{nc}
+        \PY{n}{nc}  \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+\PY{n}{b}  \PY{o}{=} \PY{n}{A} \PY{o}{@} \PY{n}{x\PYZus{}real}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Dimensiones de la matriz A:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{A}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{bar}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{squeeze}\PY{p}{(}\PY{n}{x\PYZus{}real}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Índice i}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}x\PYZus{}i\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Componentes del vector \PYZdl{}x\PYZus{}}\PY{l+s+si}{\PYZob{}real\PYZcb{}}\PY{l+s+s1}{\PYZdl{} que genera los datos}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{14}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{m}\PY{p}{)}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linewidth}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Índice i}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}b\PYZus{}i\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{\PYZus{}}\PY{o}{=}\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Datos generados \PYZdl{}b\PYZus{}i\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{14}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Vector de frecuencias omega:
+ [0.5        0.57894737 0.65789474 0.73684211 0.81578947 0.89473684
+ 0.97368421 1.05263158 1.13157895 1.21052632 1.28947368 1.36842105
+ 1.44736842 1.52631579 1.60526316 1.68421053 1.76315789 1.84210526
+ 1.92105263 2.        ]
+
+Vector de ángulos de fase phi:
+ [0.         0.34906585 0.6981317  1.04719755 1.3962634  1.74532925
+ 2.0943951  2.44346095 2.7925268  3.14159265]
+
+Dimensiones de la matriz A: (50, 200)
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{parcial2_optimizacion_files/parcial2_optimizacion_29_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{parcial2_optimizacion_files/parcial2_optimizacion_29_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    La solución con norma 2 la obtenemos a continuación. El error es
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Norma 2}
+\PY{n}{x\PYZus{}2norm}\PY{o}{=}\PY{n}{A}\PY{o}{.}\PY{n}{T}\PY{n+nd}{@np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{inv}\PY{p}{(}\PY{n}{A}\PY{n+nd}{@A}\PY{o}{.}\PY{n}{T}\PY{p}{)}\PY{n+nd}{@b}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{|Ax\PYZhy{}b| = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{A}\PY{n+nd}{@x\PYZus{}2norm}\PY{o}{\PYZhy{}}\PY{n}{b}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+|Ax-b| =  114.54984322728232
+    \end{Verbatim}
+
+    Sus componentes son
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{bar}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{squeeze}\PY{p}{(}\PY{n}{x\PYZus{}2norm}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Índice i}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}x\PYZus{}i\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Componentes del vector \PYZdl{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{mathbf}\PY{l+s+si}{\PYZob{}x\PYZcb{}}\PY{l+s+s1}{\PYZca{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{ast\PYZus{}2\PYZdl{} que genera los datos}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{14}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0.5, 1.0, 'Componentes del vector \$\textbackslash{}\textbackslash{}mathbf\{x\}\^{}\textbackslash{}\textbackslash{}ast\_2\$ que genera los
+datos')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{parcial2_optimizacion_files/parcial2_optimizacion_33_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    El problema primal en este caso es
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{optimize} \PY{k+kn}{import} \PY{n}{linprog}
+\PY{k+kn}{import} \PY{n+nn}{scipy}
+
+\PY{n}{c} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{ones}\PY{p}{(}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{n}\PY{p}{)}
+\PY{n}{A\PYZus{}primal}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{p}{(}\PY{n}{A}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{n}{A}\PY{p}{)}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Cotas de las variables}
+\PY{n}{bnd} \PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{n}\PY{p}{)}\PY{p}{]}
+
+\PY{n}{opt\PYZus{}primal} \PY{o}{=} \PY{n}{linprog}\PY{p}{(}\PY{n}{c}\PY{o}{=}\PY{n}{c}\PY{p}{,} \PY{n}{A\PYZus{}eq}\PY{o}{=}\PY{n}{A\PYZus{}primal}\PY{p}{,} \PY{n}{b\PYZus{}eq}\PY{o}{=}\PY{n}{b}\PY{p}{,} \PY{n}{bounds}\PY{o}{=}\PY{n}{bnd}\PY{p}{,}
+              \PY{n}{method}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{interior\PYZhy{}point}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Resultado del proceso:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}primal}\PY{o}{.}\PY{n}{message}\PY{p}{)}
+\PY{k}{if} \PY{n}{opt\PYZus{}primal}\PY{o}{.}\PY{n}{success}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Valor de la función objetivo:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}primal}\PY{o}{.}\PY{n}{fun}\PY{p}{)}
+    \PY{n}{x\PYZus{}1norm}\PY{o}{=}\PY{n}{opt\PYZus{}primal}\PY{o}{.}\PY{n}{x}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+Resultado del proceso: Optimization terminated successfully.
+Valor de la función objetivo: 5.758770483204005
+    \end{Verbatim}
+
+    El dual correspondiente
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Coeficientes de la funcion objetivo}
+\PY{n}{c\PYZus{}dual} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{n}{b}
+
+\PY{c+c1}{\PYZsh{} Coeficientes del lado izquierdo de las desigualdades del tipo \PYZdq{}menor o igual a\PYZdq{}}
+\PY{n}{A\PYZus{}dual} \PY{o}{=} \PY{n}{A\PYZus{}primal}\PY{o}{.}\PY{n}{T}
+
+\PY{c+c1}{\PYZsh{} Coeficientes del vector del lado derecho de las desigualdades del tipo \PYZdq{}menor o igual a\PYZdq{}}
+\PY{n}{b\PYZus{}dual} \PY{o}{=} \PY{n}{c}
+
+\PY{c+c1}{\PYZsh{} Cotas para las variables}
+\PY{n}{bnd} \PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{,} \PY{n}{scipy}\PY{o}{.}\PY{n}{inf}\PY{p}{)} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{m}\PY{p}{)}\PY{p}{]}
+
+
+\PY{n}{opt\PYZus{}dual} \PY{o}{=} \PY{n}{linprog}\PY{p}{(}\PY{n}{c}\PY{o}{=}\PY{n}{c\PYZus{}dual}\PY{p}{,} \PY{n}{A\PYZus{}ub}\PY{o}{=}\PY{n}{A\PYZus{}dual}\PY{p}{,} \PY{n}{b\PYZus{}ub}\PY{o}{=}\PY{n}{b\PYZus{}dual}\PY{p}{,} \PY{n}{bounds}\PY{o}{=}\PY{n}{bnd}\PY{p}{,}
+              \PY{n}{method}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{interior\PYZhy{}point}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Resultado del proceso:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{message}\PY{p}{)}
+\PY{k}{if} \PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{success}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Valor de la función objetivo:}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{fun}\PY{p}{)}
+    \PY{n}{lamb}\PY{o}{=}\PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{x}
+    \PY{n}{slack}\PY{o}{=}\PY{n}{opt\PYZus{}dual}\PY{o}{.}\PY{n}{slack}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+Resultado del proceso: Optimization terminated successfully.
+Valor de la función objetivo: -5.758770483051036
+    \end{Verbatim}
+
+    Verificamos las condiciones KKT
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{importlib}\PY{o}{.}\PY{n}{reload}\PY{p}{(}\PY{n}{lib\PYZus{}examen\PYZus{}2}\PY{p}{)}
+\PY{k+kn}{from} \PY{n+nn}{lib\PYZus{}examen\PYZus{}2} \PY{k+kn}{import} \PY{o}{*}
+
+\PY{n}{tol\PYZus{}KKT}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{eps}\PY{o}{*}\PY{o}{*}\PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{KKT\PYZus{}cond}\PY{p}{(}\PY{n}{tol\PYZus{}KKT}\PY{p}{,}\PY{n}{b}\PY{p}{,}\PY{n}{c}\PY{p}{,}\PY{n}{x\PYZus{}1norm}\PY{p}{,}\PY{n}{lamb}\PY{p}{,}\PY{n}{slack}\PY{p}{,}\PY{n}{A\PYZus{}primal}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Condicion 1: |AT*lamb+s-c| = 2.9373740229761033e-16
+Condicion 2: |Ax-b| =  3.67522363563323e-10
+SI se cumple la condicion de no negatividad de x
+SI se cumple la condicion de no negatividad de s
+SI se cumple la condicion de complentariedad
+    \end{Verbatim}
+
+    El error en este caso es
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x\PYZus{}1norm\PYZus{}pos\PYZus{}part}\PY{o}{=}\PY{n}{x\PYZus{}1norm}\PY{p}{[}\PY{p}{:}\PY{n}{n}\PY{p}{]}
+\PY{n}{x\PYZus{}1norm\PYZus{}neg\PYZus{}part}\PY{o}{=}\PY{n}{x\PYZus{}1norm}\PY{p}{[}\PY{n}{n}\PY{p}{:}\PY{p}{]}
+\PY{n}{x\PYZus{}1norm\PYZus{}gen}\PY{o}{=}\PY{n}{x\PYZus{}1norm\PYZus{}pos\PYZus{}part}\PY{o}{\PYZhy{}}\PY{n}{x\PYZus{}1norm\PYZus{}neg\PYZus{}part}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{|Ax\PYZhy{}b| = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{A}\PY{n+nd}{@x\PYZus{}1norm\PYZus{}gen}\PY{o}{\PYZhy{}}\PY{n}{b}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+|Ax-b| =  3.675217025201218e-10
+    \end{Verbatim}
+
+    Y las componentes de la solución con la norma 1 las visualizamos a
+continuación
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{bar}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{squeeze}\PY{p}{(}\PY{n}{x\PYZus{}1norm\PYZus{}gen}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Índice i}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}x\PYZus{}i\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Componentes del vector \PYZdl{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{mathbf}\PY{l+s+si}{\PYZob{}x\PYZcb{}}\PY{l+s+s1}{\PYZca{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{ast\PYZus{}1\PYZdl{} que genera los datos}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{14}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0.5, 1.0, 'Componentes del vector \$\textbackslash{}\textbackslash{}mathbf\{x\}\^{}\textbackslash{}\textbackslash{}ast\_1\$ que genera los
+datos')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{parcial2_optimizacion_files/parcial2_optimizacion_43_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    De igual forma tenemos una solución igual de sparse a pesar de aumentar
+el numero de ecuaciones
+
+    Para justificar la fórmula cerrada que tenemos para el caso del problema
+de optimización con la norma 2 utilizaremos el método de multiplicadores
+de Lagrange.
+
+La función langrangiana es la siguiente \[ 
+\mathcal{L}(\mathbf{x},\lambda)=\lVert \mathbf{x} \rVert_2-\lambda^T(\mathbf{A}\mathbf{x}-\mathbf{b}),
+\]
+
+luego el gradiente es \[
+\nabla \mathcal{L}(\mathbf{x},\lambda)=\begin{bmatrix}2\mathbf{x}-\mathbf{A}^T\lambda \\
+\mathbf{A}\mathbf{x}-\mathbf{b}\end{bmatrix}
+\]
+
+    Por lo tanto, un punto critico es a que que anula el gradiente anterior,
+derivamos que \(\lambda^\ast=(\mathbf{A}\mathbf{A}^T)^{-1}b\) por lo que
+\[ 
+    \mathbf{x}^\ast=\mathbf{A}^T(\mathbf{A}\mathbf{A}^T)^{-1}b,
+\] y se puede ver que \((\mathbf{x}^\ast,\lambda^\ast)\) cumplen las
+condiciones de segundo orden por lo que es mínimo local, y en virtud de
+estar en un problema convexo se tiene que \(\mathbf{x}^\ast\) es mínimo
+global del problema de optimización con restricciones.
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

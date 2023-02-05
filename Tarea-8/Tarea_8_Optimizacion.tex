@@ -1,0 +1,874 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for grffile with XeLaTeX
+    \def\Gread@@xetex#1{%
+      \IfFileExists{"\Gin@base".bb}%
+      {\Gread@eps{\Gin@base.bb}}%
+      {\Gread@@xetex@aux#1}%
+    }
+    \makeatother
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Tarea\_8\_Optimizacion}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        \ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+\title{Tarea 8 Optimización}
+\author{Roberto Vásquez Martínez \\ Profesor: Joaquín Peña Acevedo}
+\date{01/Mayo/2022}
+\maketitle   
+    
+    
+
+    
+    \hypertarget{ejercicio-1-3-puntos}{%
+\section{Ejercicio 1 (3 puntos)}\label{ejercicio-1-3-puntos}}
+
+Sea \(x=(x_1, x_2, ..., x_n)\) la variable independiente.
+
+Programar las siguientes funciones y sus gradientes:
+
+\begin{itemize}
+\tightlist
+\item
+  Función cuadrática
+\end{itemize}
+
+\[ f(\mathbf{x}) = 0.5\mathbf{x}^\top \mathbf{A}\mathbf{x} - \mathbf{b}^\top\mathbf{x}. \]
+
+Si \(\mathbf{I}\) es la matriz identidad y \(\mathbf{1}\) es la matriz
+llena de 1's, ambas de tamaño \(n\), entonces
+
+\[ \mathbf{A} = n\mathbf{I} + \mathbf{1} = 
+\left[\begin{array}{llll} n      & 0      & \cdots & 0 \\
+                       0      & n      & \cdots & 0 \\ 
+                       \vdots & \vdots & \ddots & \vdots \\
+                       0      & 0      & \cdots & n \end{array}\right]
++ \left[\begin{array}{llll} 1    & 1      & \cdots & 1 \\
+                       1      & 1      & \cdots & 1 \\ 
+                       \vdots & \vdots & \ddots & \vdots \\
+                       1      & 1      & \cdots & 1 \end{array}\right],  \qquad
+\mathbf{b} = \left[\begin{array}{l} 1 \\ 1 \\ \vdots \\ 1 \end{array}\right] \]
+
+\begin{itemize}
+\tightlist
+\item
+  Función generalizada de Rosenbrock
+\end{itemize}
+
+\[  f(x) = \sum_{i=1}^{n-1} 100(x_{i+1} - x_i^2)^2 + (1 - x_{i} )^2  \]
+
+\[ x_0 = (-1.2, 1, -1.2, 1, ..., -1.2, 1) \]
+
+En la implementación de cada función y de su gradiente, se recibe como
+argumento la variable \(x\) y definimos \(n\) como la longitud del
+arreglo \(x\), y con esos datos aplicamos la definición correspondiente.
+
+Estas funciones van a ser usadas para probar los algoritmos de
+optimización. El punto \(x_0\) que aparece en la definición de cada
+función es el punto inicial que se sugiere para el algoritmo de
+optimización.
+
+\hypertarget{soluciuxf3n}{%
+\subsection{Solución:}\label{soluciuxf3n}}
+
+    A continuación, importamos el módulo \texttt{lib\_t8.py} que contiene la
+definición de las funciones anteriores y sus gradientes. Sea \(f_Q\) y
+\(f_R\) las funciones cuadráticas y generalizada de Rosenbrock
+respectivamente. Vamos a probar estas funciones en el punto
+\(\mathbf{x}=(1,1)\).
+
+Sabemos que \(\mathbf{x}\) es punto crítico de \(f_R\) con óptimo
+\(f_R(\mathbf{x})=0\), mientras que, haciendo unos cuantos cálculos
+podemos ver que \(f_Q(\mathbf{x})=2\) y
+\(\nabla f_Q(\mathbf{x})=(3,3)^T\). Compararemos estos valores con los
+resultados numéricos.
+
+En primer lugar, evaluamos en \(\mathbf{x}\) la función cuadrática
+\(f_Q\) programada
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{lib\PYZus{}t8}
+\PY{k+kn}{import} \PY{n+nn}{importlib}
+\PY{n}{importlib}\PY{o}{.}\PY{n}{reload}\PY{p}{(}\PY{n}{lib\PYZus{}t8}\PY{p}{)}
+\PY{k+kn}{from} \PY{n+nn}{lib\PYZus{}t8} \PY{k+kn}{import} \PY{o}{*}
+
+\PY{c+c1}{\PYZsh{} Punto de prueba}
+\PY{n}{x\PYZus{}proof}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mf}{1.0}\PY{p}{,}\PY{l+m+mf}{1.0}\PY{p}{]}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Implementación de la función cuadrática y su gradiente}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Valor de la funcion cuadrática en (1,1): }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{quad\PYZus{}fun}\PY{p}{(}\PY{n}{x\PYZus{}proof}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Valor del gradiente de la funcion cuadrática en (1,1): }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{grad\PYZus{}quad\PYZus{}fun}\PY{p}{(}\PY{n}{x\PYZus{}proof}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Valor de la funcion cuadrática en (1,1):  2.0
+Valor del gradiente de la funcion cuadrática en (1,1):  [[3.]
+ [3.]]
+    \end{Verbatim}
+
+    Realizamos la misma prueba para la función generalizada de Rosenbrock,
+sabiendo que \(f_R(\mathbf{x})=0\) y \(\nabla f_R(\mathbf{x})=0\)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}  Implementación de la función generalizada de Rosenbrock y su gradiente}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Valor de la funcion generalizada de Rosenbrock en (1,1): }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{gen\PYZus{}rosenbrock}\PY{p}{(}\PY{n}{x\PYZus{}proof}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Valor del gradiente de la funcion generalizada de Rosenbrock en (1,1): }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{grad\PYZus{}gen\PYZus{}rosenbrock}\PY{p}{(}\PY{n}{x\PYZus{}proof}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Valor de la funcion generalizada de Rosenbrock en (1,1):  0.0
+Valor del gradiente de la funcion generalizada de Rosenbrock en (1,1):  [-0.
+0.]
+    \end{Verbatim}
+
+    \hypertarget{ejercicio-2-3.5-puntos}{%
+\section{Ejercicio 2 (3.5 puntos)}\label{ejercicio-2-3.5-puntos}}
+
+Programar el método de gradiente conjugado no lineal de Fletcher-Reeves:
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+La implementación recibe como argumentos a la función objetivo \(f\), su
+gradiente \(\nabla f\), un punto inicial \(x_0\), el máximo número de
+iteraciones \(N\) y una tolerancia \(\tau>0\).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Calcular \(\nabla f_0 = \nabla f(x_0)\), \(p_0 = -\nabla f_0\) y hacer
+  \(res=0\).
+\item
+  Para \(k=0,1,..., N\):
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  Si \(\|\nabla f_k\|< \tau\), hacer \(res=1\) y terminar el ciclo
+\item
+  Usando backtracking calcular el tamaño de paso \(\alpha_k\)
+\item
+  Calcular \(x_{k+1} = x_k + \alpha_k p_k\)
+\item
+  Calcular \(\nabla f_{k+1} = \nabla f(x_{k+1})\)
+\item
+  Calcular
+\end{itemize}
+
+\[ \beta_{k+1} = \frac{\nabla f_{k+1}^\top \nabla f_{k+1}}{\nabla f_{k}^\top\nabla f_{k}}  \]
+
+\begin{itemize}
+\tightlist
+\item
+  Calcular
+\end{itemize}
+
+\[ p_{k+1} = -\nabla f_{k+1} + \beta_{k+1} p_k \]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Devolver \(x_k, \nabla f_k, k, res\)
+\end{enumerate}
+
+\begin{verbatim}
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Escriba la función que implemente el algoritmo anterior.
+\item
+  Pruebe el algoritmo usando para cada una de las funciones del
+  Ejercicio 1, tomando el punto \(x_0\) que se indica.
+\item
+  Fije \(N=50000\), \(\tau = \epsilon_m^{1/3}\).
+\item
+  Para cada función del Ejercicio 1 cree el punto \(x_0\)
+  correspondiente usado \(n=2, 10, 20\) y ejecute el algoritmo. Imprima
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  n,
+\item
+  f(x0),
+\item
+  las primeras y últimas 4 entradas del punto \(x_k\) que devuelve el
+  algoritmo,
+\item
+  f(xk),
+\item
+  la norma del vector \(\nabla f_k\),
+\item
+  el número \(k\) de iteraciones realizadas,
+\item
+  la variable \(res\) para saber si el algoritmo puedo converger.
+\end{itemize}
+
+\hypertarget{soluciuxf3n}{%
+\subsection{Solución:}\label{soluciuxf3n}}
+
+    Actualizamos el módulo con el que estamos trabajando, definimos la
+tolerancia, el número máximo de iteraciones y el parámetro \(\rho\) del
+algoritmo de backtracking
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{71}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{importlib}\PY{o}{.}\PY{n}{reload}\PY{p}{(}\PY{n}{lib\PYZus{}t8}\PY{p}{)}
+\PY{k+kn}{import} \PY{n+nn}{lib\PYZus{}t8}
+\PY{k+kn}{from} \PY{n+nn}{lib\PYZus{}t8} \PY{k+kn}{import} \PY{o}{*}
+
+\PY{c+c1}{\PYZsh{} Tolerancia y numero maximo de iteraciones}
+\PY{n}{tol}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{eps}\PY{o}{*}\PY{o}{*}\PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{3}\PY{p}{)}
+\PY{n}{N}\PY{o}{=}\PY{l+m+mi}{50000}
+\PY{n}{rho}\PY{o}{=}\PY{l+m+mf}{0.8}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{funciuxf3n-cuadruxe1tica}{%
+\paragraph{Función cuadrática}\label{funciuxf3n-cuadruxe1tica}}
+
+En primer lugar, probamos el algoritmo de Fletcher-Reeves como en clase,
+en este caso como es una función cuadrática es equivalente al método de
+gradiente conjugado. A continuación, probamos el desempeño en esta
+función para \(n=2,10,20\)
+
+Por la proposición 1 de la Clase 17, el método de gradiente conjugado en
+este caso es globalmente convergente y el punto óptimo es
+\(\mathbf{x}_\ast=\frac{1}{2n}(1,1,\dots,1)^T\). Daremos cualquier punto
+inicial y compararemos con el óptimo correspondiente, en este caso
+usaremos la misma condición que se sugiere en la función generalizada de
+Rosenbrock
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{72}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Valores de n}
+\PY{n}{n}\PY{o}{=}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{20}\PY{p}{]}
+\PY{c+c1}{\PYZsh{} Paras para cada valor de n}
+\PY{k}{for} \PY{n}{nn} \PY{o+ow}{in} \PY{n}{n}\PY{p}{:}
+    \PY{n}{x0}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{tile}\PY{p}{(}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.2}\PY{p}{,}\PY{l+m+mf}{1.0}\PY{p}{]}\PY{p}{,}\PY{n+nb}{int}\PY{p}{(}\PY{n}{nn}\PY{o}{/}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+    \PY{n}{proof\PYZus{}fletcher\PYZus{}reeves}\PY{p}{(}\PY{n}{quad\PYZus{}fun}\PY{p}{,}\PY{n}{grad\PYZus{}quad\PYZus{}fun}\PY{p}{,}\PY{n}{x0}\PY{p}{,}\PY{n}{N}\PY{p}{,}\PY{n}{tol}\PY{p}{,}\PY{n}{rho}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+El algoritmo de Fletcher-Reeves CONVERGE
+n =  2
+f(x0) =  2.66
+xk =  [0.25000229 0.2499987 ]
+k =  91
+fk =  -0.24999999999256428
+||gk|| =  5.803891132856387e-06
+
+
+
+El algoritmo de Fletcher-Reeves CONVERGE
+n =  10
+f(x0) =  62.49999999999999
+Primer y últimas 4 entradas de xk =  [0.04999983 0.05000018 0.04999983
+0.05000018] {\ldots} [0.04999983 0.05000018 0.04999983 0.05000018]
+k =  134
+fk =  -0.24999999999843664
+||gk|| =  5.603306622825684e-06
+
+
+
+El algoritmo de Fletcher-Reeves CONVERGE
+n =  20
+f(x0) =  248.0
+Primer y últimas 4 entradas de xk =  [0.02499995 0.02500007 0.02499995
+0.02500007] {\ldots} [0.02499995 0.02500007 0.02499995 0.02500007]
+k =  138
+fk =  -0.2499999999992326
+||gk|| =  5.707639527877831e-06
+
+
+
+    \end{Verbatim}
+
+    Como usamos backtracking para estimar el óptimo del tamaño de paso no se
+necesariamente se obtiene la solución en \(n\) pasos y en efecto hemos
+obtenido los vectores solución de la forma \(\frac{1}{2n}(1,1,\dots,1)\)
+para \(n=2,10,20\), que corresponden a los valores donde la función
+alcanza su óptimo en cada caso.
+
+    \hypertarget{funciuxf3n-generalizada-de-rosenbrock}{%
+\paragraph{Función Generalizada de
+Rosenbrock}\label{funciuxf3n-generalizada-de-rosenbrock}}
+
+Repetimos la prueba ahora con la función generalizada de Rosenbrock,
+sabiendo que el óptimo es \(\mathbf{x}_\ast=(1,1,\dots,1)\)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{73}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Paras para cada valor de n}
+\PY{k}{for} \PY{n}{nn} \PY{o+ow}{in} \PY{n}{n}\PY{p}{:}
+    \PY{n}{x0}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{tile}\PY{p}{(}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.2}\PY{p}{,}\PY{l+m+mf}{1.0}\PY{p}{]}\PY{p}{,}\PY{n+nb}{int}\PY{p}{(}\PY{n}{nn}\PY{o}{/}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+    \PY{n}{proof\PYZus{}fletcher\PYZus{}reeves}\PY{p}{(}\PY{n}{gen\PYZus{}rosenbrock}\PY{p}{,}\PY{n}{grad\PYZus{}gen\PYZus{}rosenbrock}\PY{p}{,}\PY{n}{x0}\PY{p}{,}\PY{n}{N}\PY{p}{,}\PY{n}{tol}\PY{p}{,}\PY{n}{rho}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+El algoritmo de Fletcher-Reeves CONVERGE
+n =  2
+f(x0) =  24.199999999999996
+xk =  [0.99999539 0.99999077]
+k =  251
+fk =  2.1277093635685042e-11
+||gk|| =  4.780235391540514e-06
+
+
+
+El algoritmo de Fletcher-Reeves CONVERGE
+n =  10
+f(x0) =  2057.0
+Primer y últimas 4 entradas de xk =  [0.99999999 1.         1.         1.
+] {\ldots} [0.99999999 0.99999998 0.99999995 0.9999999 ]
+k =  2019
+fk =  2.193108694121752e-14
+||gk|| =  5.749420469861276e-06
+
+
+
+El algoritmo de Fletcher-Reeves CONVERGE
+n =  20
+f(x0) =  4598.0
+Primer y últimas 4 entradas de xk =  [1. 1. 1. 1.] {\ldots} [0.99999999 0.99999998
+0.99999997 0.99999993]
+k =  38376
+fk =  1.5946132549678812e-14
+||gk|| =  6.039770533007446e-06
+
+
+
+    \end{Verbatim}
+
+    \hypertarget{ejercicio-3-3.5-puntos}{%
+\section{Ejercicio 3 (3.5 puntos)}\label{ejercicio-3-3.5-puntos}}
+
+Programar el método de gradiente conjugado no lineal de usando la
+fórmula de Hestenes-Stiefel:
+
+En este caso el algoritmo es igual al del Ejercicio 2, con excepción del
+cálculo de \(\beta_{k+1}\). Primero se calcula el vector
+\(\mathbf{y}_k\) y luego \(\beta_{k+1}\):
+
+\[ \mathbf{y}_k =  \nabla f_{k+1}-\nabla f_{k} \]
+\[ \beta_{k+1} =   \frac{\nabla f_{k+1}^\top\mathbf{y}_k }{p_{k}^\top\mathbf{y}_k}  \]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Repita el Ejercicio 2 usando la fórmula de Hestenes-Stiefel.
+\item
+  ¿Cuál de los métodos es mejor para encontrar los óptimos de las
+  funciones de prueba?
+\end{enumerate}
+
+\hypertarget{soluciuxf3n}{%
+\subsection{Solución:}\label{soluciuxf3n}}
+
+    Haremos las mismas pruebas tanto para la función cuadrática como la
+función generalizada de Rosenbrock ahora utilizando las actualización de
+Hestenes-Stiefel.
+
+\hypertarget{funciuxf3n-cuadruxe1tica}{%
+\paragraph{Función cuadrática}\label{funciuxf3n-cuadruxe1tica}}
+
+En la siguiente celda presentamos el resultado de Hestenes-Stiefel para
+la función \(f_Q\)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{74}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{importlib}\PY{o}{.}\PY{n}{reload}\PY{p}{(}\PY{n}{lib\PYZus{}t8}\PY{p}{)}
+\PY{k+kn}{import} \PY{n+nn}{lib\PYZus{}t8}
+\PY{k+kn}{from} \PY{n+nn}{lib\PYZus{}t8} \PY{k+kn}{import} \PY{o}{*}
+
+\PY{c+c1}{\PYZsh{} Paras para cada valor de n}
+\PY{k}{for} \PY{n}{nn} \PY{o+ow}{in} \PY{n}{n}\PY{p}{:}
+    \PY{n}{x0}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{tile}\PY{p}{(}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.2}\PY{p}{,}\PY{l+m+mf}{1.0}\PY{p}{]}\PY{p}{,}\PY{n+nb}{int}\PY{p}{(}\PY{n}{nn}\PY{o}{/}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+    \PY{n}{proof\PYZus{}hestenes\PYZus{}stiefel}\PY{p}{(}\PY{n}{quad\PYZus{}fun}\PY{p}{,}\PY{n}{grad\PYZus{}quad\PYZus{}fun}\PY{p}{,}\PY{n}{x0}\PY{p}{,}\PY{n}{N}\PY{p}{,}\PY{n}{tol}\PY{p}{,}\PY{n}{rho}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+El algoritmo de Hestenes-Stiefel CONVERGE
+n =  2
+f(x0) =  2.66
+xk =  [0.25000217 0.24999881]
+k =  66
+fk =  -0.24999999999340244
+||gk|| =  5.497058549749721e-06
+
+
+
+El algoritmo de Hestenes-Stiefel CONVERGE
+n =  10
+f(x0) =  62.49999999999999
+Primer y últimas 4 entradas de xk =  [0.05000019 0.04999985 0.05000019
+0.04999985] {\ldots} [0.05000019 0.04999985 0.05000019 0.04999985]
+k =  162
+fk =  -0.24999999999844713
+||gk|| =  5.650924470696626e-06
+
+
+
+El algoritmo de Hestenes-Stiefel CONVERGE
+n =  20
+f(x0) =  248.0
+Primer y últimas 4 entradas de xk =  [0.02499993 0.02500004 0.02499993
+0.02500004] {\ldots} [0.02499993 0.02500004 0.02499993 0.02500004]
+k =  227
+fk =  -0.24999999999929282
+||gk|| =  5.793279751916127e-06
+
+
+
+    \end{Verbatim}
+
+    \hypertarget{funciuxf3n-generalizada-de-rosenbrock}{%
+\paragraph{Función Generalizada de
+Rosenbrock}\label{funciuxf3n-generalizada-de-rosenbrock}}
+
+Se puede ver que en el caso cuadrático el desempeño es el mismo porque
+ambas actualizaciones son equivalente al método de gradiente conjugado
+para el caso cuadrática.
+
+El caso de mayor interés, y en el que esperamos descrepancias es
+utilizando como función de prueba a la función \(f_R\).
+
+A continuación, presentamos el resumen de las pruebas
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{75}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Paras para cada valor de n}
+\PY{k}{for} \PY{n}{nn} \PY{o+ow}{in} \PY{n}{n}\PY{p}{:}
+    \PY{n}{x0}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{tile}\PY{p}{(}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.2}\PY{p}{,}\PY{l+m+mf}{1.0}\PY{p}{]}\PY{p}{,}\PY{n+nb}{int}\PY{p}{(}\PY{n}{nn}\PY{o}{/}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+    \PY{n}{proof\PYZus{}hestenes\PYZus{}stiefel}\PY{p}{(}\PY{n}{gen\PYZus{}rosenbrock}\PY{p}{,}\PY{n}{grad\PYZus{}gen\PYZus{}rosenbrock}\PY{p}{,}\PY{n}{x0}\PY{p}{,}\PY{n}{N}\PY{p}{,}\PY{n}{tol}\PY{p}{,}\PY{n}{rho}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+El algoritmo de Hestenes-Stiefel CONVERGE
+n =  2
+f(x0) =  24.199999999999996
+xk =  [1.0000003 1.0000006]
+k =  110
+fk =  1.0800792500369892e-13
+||gk|| =  5.942872244700956e-06
+
+
+
+El algoritmo de Hestenes-Stiefel CONVERGE
+n =  10
+f(x0) =  2057.0
+Primer y últimas 4 entradas de xk =  [1. 1. 1. 1.] {\ldots} [1.00000001 1.00000002
+1.00000004 1.00000009]
+k =  783
+fk =  1.4272406448603126e-14
+||gk|| =  5.906937683335181e-06
+
+
+
+El algoritmo de Hestenes-Stiefel CONVERGE
+n =  20
+f(x0) =  4598.0
+Primer y últimas 4 entradas de xk =  [1. 1. 1. 1.] {\ldots} [0.99999994 0.99999988
+0.99999976 0.99999953]
+k =  503
+fk =  8.817321104442124e-14
+||gk|| =  5.955100340841743e-06
+
+
+
+    \end{Verbatim}
+
+    Comparando Frechet-Reeves con Hestenes-Stiefel, Frechet-Reeves tiene un
+mejor comportamiento en el caso de la función \(f_Q\) en general, sin
+embargo, en el caso de la función de Rosenbrock, el comportamiento de
+Hestenes-Stiefel es mucho mejor que Frechet-Reeves respecto al número de
+iteraciones.
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

@@ -1,0 +1,1052 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Tarea\_3\_Optimizacion}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    \title{Tarea 3 Optimización}
+    \author{Roberto Vásquez Martínez \\ Profesor: Joaquín Peña Acevedo}
+    \date{27/Febrero/2022}
+    \maketitle
+
+    
+    \hypertarget{ejercicio-1-4-puntos}{%
+\subsection{Ejercicio 1 (4 puntos)}\label{ejercicio-1-4-puntos}}
+
+La función de Rosenbrock se define como
+
+\[ f(x_1, x_2) = 100\left(x_2 − x_1^2 \right)^2 + (1 − x_1)^2. \]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Calcule las expresiones del gradiente y la Hessiana de la función de
+  Rosenbrock.
+\item
+  Escriba las funciones en Python que evaluan la función de Rosenbrock,
+  su gradiente y Hessiana.
+\item
+  Muestre que \(x_* = (1,1)^{\top}\) es el único punto estacionario de
+  la función.
+\item
+  Calcule los eigenvalores de la matriz Hessiana de \(f\) en el punto
+  \(x_*\) para mostrar que es definida positiva, por lo que \(x_*\)
+  corresponde a un mínimo.
+\item
+  Grafique la función de Rosenbrock en el rectángulo
+  \([-1.5, 1.5] \times [-1, 2]\). Use las funciones \texttt{surface()} e
+  \texttt{imshow()} para generar la gráfica 3D y la vista 2D.
+\end{enumerate}
+
+\hypertarget{soluciuxf3n}{%
+\subsubsection{Solución:}\label{soluciuxf3n}}
+
+    El gradiente de \(f\) es
+\[\bigtriangledown f(x_1,x_2)=\begin{pmatrix}-400(x_2-x_1^2)x_1-2(1-x_1)&\\ &\\200(x_2-x_1^2)&\end{pmatrix}\]
+y el hessiano
+\[ H(x_1,x_2)=\begin{pmatrix}1200x_1^2-400x_2+2 & -400x_1\\ -400x_1 & 200\end{pmatrix}.\]
+
+Las definiciones de las expresiones anteriores junto a la definición de
+la función de Rosenbrock se encuentran en el módulo \texttt{lib\_t3.py}.
+Por lo que con esto tenemos los puntos 1 y 2.
+
+Para el punto 3 debemos probar que \(x_\ast=(1,1)^T\) es el único punto
+estacionario de la función de Rosenbrock. Entonces debemos resolver la
+ecuación \[ \bigtriangledown f(\mathbf{x})=(0,0)^T,\] donde
+\(\mathbf{x}=(x_1,x_2)\in\mathbb{R}^2\).
+
+Igualando a \(0\) cada componente del gradiente tenemos que queremos
+hallar \(\mathbf{x}\in\mathbb{R}^2\) tal que \[200(x_2-x_1^2)=0,\] y
+\[-400(x_2-x_1^2)x_1-2(1-x_1)=0.\]
+
+De la primer identidad se tiene que cumplir \(x_2=x_1^2\), sustituyendo
+en la segunda ecuación obtenemos que se debe satisfacer \[2(1-x_1)=0,\]
+lo que pasa sólo si \(x_1=1\), luego \(x_2=1\), por lo que el único
+punto estacionario de \(f\) es \(x_\ast=(1,1)^T\), que es lo que
+queríamos probar.
+
+A continuación escribimos el código con el que obtenemos los
+eigenvalores de la matriz \(H(x_\ast)\).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Respuesta 1.4.}
+\PY{k+kn}{from} \PY{n+nn}{scipy} \PY{k+kn}{import} \PY{n}{linalg}
+\PY{k+kn}{import} \PY{n+nn}{lib\PYZus{}t3}
+\PY{k+kn}{from} \PY{n+nn}{lib\PYZus{}t3} \PY{k+kn}{import} \PY{o}{*}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+
+\PY{n}{np}\PY{o}{.}\PY{n}{set\PYZus{}printoptions}\PY{p}{(}\PY{n}{precision}\PY{o}{=}\PY{l+m+mi}{4}\PY{p}{)}
+\PY{n}{x\PYZus{}ast}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{ones}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{eigen\PYZus{}val\PYZus{}x\PYZus{}ast}\PY{o}{=}\PY{n}{linalg}\PY{o}{.}\PY{n}{eigvals}\PY{p}{(}\PY{n}{hess\PYZus{}Rosenbrock}\PY{p}{(}\PY{n}{x\PYZus{}ast}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Eigenvalores de H(1,1): }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{eigen\PYZus{}val\PYZus{}x\PYZus{}ast}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Eigenvalores de H(1,1):  [1.0016e+03+0.j 3.9936e-01+0.j]
+    \end{Verbatim}
+
+    Como la parte imaginaria es \(0\) tenemos que \(H(x_\ast)\) es una
+matriz con valores propios reales y positivos, entonces \(H(x_\ast)\) es
+positiva definida, de lo que se concluye \(x_\ast\) corresponde a un
+mínimo local.
+
+Finalmente para la parte 5 graficaremos la función de Rosenbrock en el
+domino \([-1.5,1.5]\times [-1,2]\). La superficia la graficamos con
+ayuda de la función \texttt{plot\_surface} de la librería
+\texttt{matplotlib.pyplot}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Respuesta 1.5.}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{import} \PY{n+nn}{importlib}
+
+\PY{n}{importlib}\PY{o}{.}\PY{n}{reload}\PY{p}{(}\PY{n}{lib\PYZus{}t3}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Setting up input values}
+\PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.5}\PY{p}{,} \PY{l+m+mf}{1.5}\PY{p}{,} \PY{l+m+mf}{0.1}\PY{p}{)}
+\PY{n}{y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.0}\PY{p}{,} \PY{l+m+mf}{2.0}\PY{p}{,} \PY{l+m+mf}{0.1}\PY{p}{)}
+\PY{n}{X}\PY{p}{,} \PY{n}{Y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{meshgrid}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Calculating the output and storing it in the array Z}
+\PY{n}{Z} \PY{o}{=} \PY{n}{f\PYZus{}Rosenbrock\PYZus{}graph}\PY{p}{(}\PY{n}{X}\PY{p}{,}\PY{n}{Y}\PY{p}{)}
+
+\PY{n}{fig} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{8}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+\PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{axes}\PY{p}{(}\PY{n}{projection}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3d}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{plot\PYZus{}surface}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{Z}\PY{p}{,} \PY{n}{rstride}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{cstride}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,}
+\PY{n}{cmap}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{coolwarm}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{edgecolor}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{none}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Función de Rosenbrock}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{o}{+}\PY{l+s+sa}{r}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}f(x\PYZus{}1,x\PYZus{}2)=100}\PY{l+s+s2}{\PYZbs{}}\PY{l+s+s2}{left(x\PYZus{}2 − x\PYZus{}1\PYZca{}2 }\PY{l+s+s2}{\PYZbs{}}\PY{l+s+s2}{right)\PYZca{}2 + (1 − x\PYZus{}1)\PYZca{}2\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{view\PYZus{}init}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{45}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Tarea_3_Optimizacion_files/Tarea_3_Optimizacion_4_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Y la vista 2D la obtenemos con la función \texttt{imshow}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Tambien se puede crear una vista 2D de la superficie}
+\PY{n}{fig} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{8}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+\PY{n}{im} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{Z}\PY{p}{,} \PY{n}{cmap}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{coolwarm}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{extent}\PY{o}{=}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.5}\PY{p}{,} \PY{l+m+mf}{1.5}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{1.0}\PY{p}{,} \PY{l+m+mf}{2.0}\PY{p}{)}\PY{p}{,}\PY{n}{interpolation}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bilinear}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{colorbar}\PY{p}{(}\PY{n}{im}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Función de Rosenbrock}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{o}{+}\PY{l+s+sa}{r}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdl{}f(x\PYZus{}1,x\PYZus{}2)=100}\PY{l+s+s2}{\PYZbs{}}\PY{l+s+s2}{left(x\PYZus{}2 − x\PYZus{}1\PYZca{}2 }\PY{l+s+s2}{\PYZbs{}}\PY{l+s+s2}{right)\PYZca{}2 + (1 − x\PYZus{}1)\PYZca{}2\PYZdl{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{x1}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{x2}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0, 0.5, 'x2')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{Tarea_3_Optimizacion_files/Tarea_3_Optimizacion_6_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Y se observa que el mínimo local de \(f\) es de hecho global pues
+\(f(\mathbf{x})\geq 0\) para todo \(\mathbf{x}\in\mathbb{R}^2\) por ser
+suma de dos reales al cuadrado y \(f(x_{\ast})=0\)
+
+    \hypertarget{ejercicio-2-3-puntos}{%
+\subsection{Ejercicio 2 (3 puntos)}\label{ejercicio-2-3-puntos}}
+
+Programe la función que devuelve una aproximación del gradiente de una
+función en un punto particular usando diferencias finitas.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  La función que calcula la aproximación debe recibir como parámetros
+  una función escalar \(f\), el punto \(x\) y el incremento \(h>0\).
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  Si \(n\) es el tamaño del arreglo \(x\), cree un arreglo de tamaño
+  \(n\) para almacenar las componentes de las aproximaciones del vector
+  gradiente. Para aproximar la \(i\)-ésima derivada parcial use
+\end{itemize}
+
+\[ \frac{\partial f}{\partial x_i}(x) \approx
+\frac{f(x + he_i) - f(x)}{h}, \]
+
+donde \(e_i\) es el \(i\)-ésimo vector canónico.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Pruebe la función comparando el gradiente analítico de la función de
+  Rosenbrock en varios puntos y varios valores del parámetro \(h\):
+\end{enumerate}
+
+\begin{itemize}
+\item
+  Seleccione \(h \in \{0.001, 0.0001, 0.00001 \}\).
+\item
+  Tome \(x = (-1.5,2) + \lambda (2.5,-1)\) con
+  \(\lambda \in \{0, 0.5, 1.0\}\). Imprima el valor \(h\), el punto
+  \(x\), el gradiente \(g_{a}(x)\) obtenido con la función analítica
+  programada en el Ejercicio 1, el gradiente \(g_{df}(x;h)\) obtenido
+  por diferencias finitas y la norma del vector
+  \(\|g_{a}(x) - g_{df}(x;h)\|\) (puede elegir la norma que quiera
+  usar).
+\end{itemize}
+
+\hypertarget{soluciuxf3n}{%
+\subsubsection{Solución:}\label{soluciuxf3n}}
+
+    La función que resuelve el numeral 1 es \texttt{diff\_f},que está en el
+módulo \texttt{lib\_t3.py}, la cual recibe como argumendo una función
+escalar \(f\), el vector \(\mathbf{x}\) donde se calculará la derivada y
+el tamaño de paso \(h\) empleado en la aproximación por diferencias
+finitas.
+
+Para \(h=0.001\) imprimimos el tamaño de paso \(h\), el valor del
+gradiente analítico \(g_a(x)\) iterando sobre \(\lambda\), el valor del
+gradiente obtenido por diferencias finitas \(g_{df}(x;h)\) y la norma
+euclideana \(\lVert g_a(x)-g_{df}(x;h) \rVert_2\).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Respuesta 2.1.}
+\PY{n}{h}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mf}{1e\PYZhy{}3}\PY{p}{,}\PY{l+m+mf}{1e\PYZhy{}4}\PY{p}{,}\PY{l+m+mf}{1e\PYZhy{}5}\PY{p}{]}\PY{p}{)}
+\PY{n}{x1}\PY{p}{,}\PY{n}{x2}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.5}\PY{p}{,}\PY{l+m+mf}{2.0}\PY{p}{]}\PY{p}{)}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mf}{2.5}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mf}{1.0}\PY{p}{]}\PY{p}{)}
+\PY{n}{lamb}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mf}{0.0}\PY{p}{,}\PY{l+m+mf}{0.5}\PY{p}{,}\PY{l+m+mf}{1.0}\PY{p}{]}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El tamaño de paso es: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{k}{for} \PY{n}{l} \PY{o+ow}{in} \PY{n}{lamb}\PY{p}{:}
+    \PY{n}{grad\PYZus{}a}\PY{o}{=}\PY{n}{grad\PYZus{}Rosenbrock}\PY{p}{(}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{p}{)}
+    \PY{n}{grad\PYZus{}df}\PY{o}{=}\PY{n}{diff\PYZus{}f}\PY{p}{(}\PY{n}{f\PYZus{}Rosenbrock}\PY{p}{,}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{p}{,}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El valor donde se calcula la derivada es: }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El gradiente analítico en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{grad\PYZus{}a}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El gradiente por diferencias finitas en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{grad\PYZus{}df}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{La norma 2 ||g\PYZus{}df\PYZhy{}g\PYZus{}a|| en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{p}{(}\PY{n}{grad\PYZus{}a}\PY{o}{\PYZhy{}}\PY{n}{grad\PYZus{}df}\PY{p}{)}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+El tamaño de paso es:  0.001
+
+
+El valor donde se calcula la derivada es: [-1.5  2. ]
+El gradiente analítico en [-1.5  2. ] es:
+ [[-155.]
+ [ -50.]]
+El gradiente por diferencias finitas en [-1.5  2. ] es:
+ [[-154.0496]
+ [ -49.9   ]]
+La norma 2 ||g\_df-g\_a|| en [-1.5  2. ] es:
+ 0.9556465612998835
+
+
+
+El valor donde se calcula la derivada es: [-0.25  1.5 ]
+El gradiente analítico en [-0.25  1.5 ] es:
+ [[141.25]
+ [287.5 ]]
+El gradiente por diferencias finitas en [-0.25  1.5 ] es:
+ [[140.9884]
+ [287.6   ]]
+La norma 2 ||g\_df-g\_a|| en [-0.25  1.5 ] es:
+ 0.2800616140542944
+
+
+
+El valor donde se calcula la derivada es: [1. 1.]
+El gradiente analítico en [1. 1.] es:
+ [[0.]
+ [0.]]
+El gradiente por diferencias finitas en [1. 1.] es:
+ [[0.4014]
+ [0.1   ]]
+La norma 2 ||g\_df-g\_a|| en [1. 1.] es:
+ 0.4136689984515496
+
+
+
+    \end{Verbatim}
+
+    Con \(h=0.001\) obtenemos un error del orden de \(10^{-1}\) para cada
+valor donde obtuvimos el gradiente. Repitiendo el experimento pero ahora
+con tamaño de paso \(h=0.0001\) obtenemos los siguientes resultados
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El tamaño de paso es: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{k}{for} \PY{n}{l} \PY{o+ow}{in} \PY{n}{lamb}\PY{p}{:}
+    \PY{n}{grad\PYZus{}a}\PY{o}{=}\PY{n}{grad\PYZus{}Rosenbrock}\PY{p}{(}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{p}{)}
+    \PY{n}{grad\PYZus{}df}\PY{o}{=}\PY{n}{diff\PYZus{}f}\PY{p}{(}\PY{n}{f\PYZus{}Rosenbrock}\PY{p}{,}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{p}{,}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El valor donde se calcula la derivada es: }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El gradiente analítico en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{grad\PYZus{}a}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El gradiente por diferencias finitas en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{grad\PYZus{}df}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{La norma 2 ||g\PYZus{}df\PYZhy{}g\PYZus{}a|| en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{p}{(}\PY{n}{grad\PYZus{}a}\PY{o}{\PYZhy{}}\PY{n}{grad\PYZus{}df}\PY{p}{)}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+El tamaño de paso es:  0.0001
+
+
+El valor donde se calcula la derivada es: [-1.5  2. ]
+El gradiente analítico en [-1.5  2. ] es:
+ [[-155.]
+ [ -50.]]
+El gradiente por diferencias finitas en [-1.5  2. ] es:
+ [[-154.9049]
+ [ -49.99  ]]
+La norma 2 ||g\_df-g\_a|| en [-1.5  2. ] es:
+ 0.09561835007987253
+
+
+
+El valor donde se calcula la derivada es: [-0.25  1.5 ]
+El gradiente analítico en [-0.25  1.5 ] es:
+ [[141.25]
+ [287.5 ]]
+El gradiente por diferencias finitas en [-0.25  1.5 ] es:
+ [[141.2238]
+ [287.51  ]]
+La norma 2 ||g\_df-g\_a|| en [-0.25  1.5 ] es:
+ 0.027997764395229302
+
+
+
+El valor donde se calcula la derivada es: [1. 1.]
+El gradiente analítico en [1. 1.] es:
+ [[0.]
+ [0.]]
+El gradiente por diferencias finitas en [1. 1.] es:
+ [[0.0401]
+ [0.01  ]]
+La norma 2 ||g\_df-g\_a|| en [1. 1.] es:
+ 0.04133195886983942
+
+
+
+    \end{Verbatim}
+
+    Aquí con \(h=0.0001\) obtuvimos diferencia entre el gradiente analítico
+y numérico del orden de \(10^{-2}\). Finalmente, considerando
+\(h=0.00001\) obtenemos
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El tamaño de paso es: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{k}{for} \PY{n}{l} \PY{o+ow}{in} \PY{n}{lamb}\PY{p}{:}
+    \PY{n}{grad\PYZus{}a}\PY{o}{=}\PY{n}{grad\PYZus{}Rosenbrock}\PY{p}{(}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{p}{)}
+    \PY{n}{grad\PYZus{}df}\PY{o}{=}\PY{n}{diff\PYZus{}f}\PY{p}{(}\PY{n}{f\PYZus{}Rosenbrock}\PY{p}{,}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{p}{,}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El valor donde se calcula la derivada es: }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El gradiente analítico en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{grad\PYZus{}a}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El gradiente por diferencias finitas en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{grad\PYZus{}df}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{La norma 2 ||g\PYZus{}df\PYZhy{}g\PYZus{}a|| en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{grad\PYZus{}a}\PY{o}{\PYZhy{}}\PY{n}{grad\PYZus{}df}\PY{p}{)}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+El tamaño de paso es:  1e-05
+
+
+El valor donde se calcula la derivada es: [-1.5  2. ]
+El gradiente analítico en [-1.5  2. ] es:
+ [[-155.]
+ [ -50.]]
+El gradiente por diferencias finitas en [-1.5  2. ] es:
+ [[-154.9905]
+ [ -49.999 ]]
+La norma 2 ||g\_df-g\_a|| en [-1.5  2. ] es:
+ 0.00956237097442853
+
+
+
+El valor donde se calcula la derivada es: [-0.25  1.5 ]
+El gradiente analítico en [-0.25  1.5 ] es:
+ [[141.25]
+ [287.5 ]]
+El gradiente por diferencias finitas en [-0.25  1.5 ] es:
+ [[141.2474]
+ [287.501 ]]
+La norma 2 ||g\_df-g\_a|| en [-0.25  1.5 ] es:
+ 0.0027996949222215094
+
+
+
+El valor donde se calcula la derivada es: [1. 1.]
+El gradiente analítico en [1. 1.] es:
+ [[0.]
+ [0.]]
+El gradiente por diferencias finitas en [1. 1.] es:
+ [[0.004]
+ [0.001]]
+La norma 2 ||g\_df-g\_a|| en [1. 1.] es:
+ 0.004132846573836989
+
+
+
+    \end{Verbatim}
+
+    Y en este caso obtuvimos una diferencia entre los gradientes del orden
+de \(10^{-3}\) con respecto a la norma euclideana.
+
+    \hypertarget{ejercicio-3-3-puntos}{%
+\subsection{Ejercicio 3 (3 puntos)}\label{ejercicio-3-3-puntos}}
+
+Programe la función que devuelve una aproximación de la Hessiana de una
+función en un punto particular usando diferencias finitas.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  La función que calcula la aproximación debe recibir como parámetros
+  una función escalar \(f\), el punto \(x\) y el incremento \(h>0\).
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  Si \(n\) es el tamaño del arreglo \(x\), cree una matriz de tamaño
+  \(n \times n\) para almacenar las entradas de las aproximaciones de
+  las segundas derivadas parciales. Puede usar
+\end{itemize}
+
+\[ \frac{\partial^2 f}{\partial x_i \partial x_j}(x) \approx
+\frac{f(x + he_i+he_j) - f(x+he_i)- f(x+he_j) + f(x)}{h^2}, \]
+
+donde \(e_i\) es el \(i\)-ésimo vector canónico.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Pruebe la función comparando el gradiente analítico de la función de
+  Rosenbrock en varios puntos y varios valores del parámetro \(h\):
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  Seleccione \(h \in \{0.001, 0.0001, 0.00001 \}\)
+\item
+  Tome \(x = (-1.5,2) + \lambda (2.5,-1)\) con
+  \(\lambda \in \{0, 0.5, 1.0\}\) Imprima el valor \(h\), el punto
+  \(x\), la Hessiana \(H_{a}(x)\) obtenido con la función analítica
+  programada en el Ejercicio 1, la Hessiana \(H_{df}(x;h)\) obtenido por
+  diferencias finitas y la norma de la matriz
+  \(\|H_{a}(x) - H_{df}(x;h)\|\) (puede elegir la norma que quiera
+  usar).
+\end{itemize}
+
+\hypertarget{soluciuxf3n}{%
+\subsubsection{Solución:}\label{soluciuxf3n}}
+
+    La función que resuelve el numeral 1 es \texttt{hess\_f}, que está en el
+módulo \texttt{lib\_t3.py}, la cual recibe como argumendo una función
+escalar \(f\), el vector \(\mathbf{x}\) donde se calculará la derivada y
+el tamaño de paso \(h\) empleado en la aproximación por diferencias
+finitas.
+
+Para \(h=0.001\) imprimimos el tamaño de paso \(h\), el valor del
+hessiano analítico \(H_a(x)\) iterando sobre \(\lambda\), el valor del
+hessiano obtenido por diferencias finitas \(H_{df}(x;h)\) y la norma de
+Fröbenius \(\lVert H_a(x)-H_{df}(x;h) \rVert_F\).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Respuesta 3.1.}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El tamaño de paso es: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{k}{for} \PY{n}{l} \PY{o+ow}{in} \PY{n}{lamb}\PY{p}{:}
+    \PY{n}{hess\PYZus{}a}\PY{o}{=}\PY{n}{hess\PYZus{}Rosenbrock}\PY{p}{(}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{p}{)}
+    \PY{n}{hess\PYZus{}df}\PY{o}{=}\PY{n}{hess\PYZus{}f}\PY{p}{(}\PY{n}{f\PYZus{}Rosenbrock}\PY{p}{,}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{p}{,}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+    \PY{n}{norm\PYZus{}hess}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{p}{(}\PY{n}{hess\PYZus{}a}\PY{o}{\PYZhy{}}\PY{n}{hess\PYZus{}df}\PY{p}{)}\PY{p}{,}\PY{n+nb}{ord}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fro}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El valor donde se calcula el hessiano es: }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El hessiano analítico en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{hess\PYZus{}a}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El hessiano por diferencias finitas en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{hess\PYZus{}df}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{La norma de Frobenius ||H\PYZus{}df\PYZhy{}H\PYZus{}a|| en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{norm\PYZus{}hess}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+El tamaño de paso es:  0.001
+
+
+El valor donde se calcula el hessiano es: [-1.5  2. ]
+El hessiano analítico en [-1.5  2. ] es:
+ [[1902.  600.]
+ [ 600.  200.]]
+El hessiano por diferencias finitas en [-1.5  2. ] es:
+ [[1898.4014  599.8   ]
+ [ 599.8     200.    ]]
+La norma de Frobenius ||H\_df-H\_a|| en [-1.5  2. ] es:
+ 3.6096983250551644
+
+
+
+El valor donde se calcula el hessiano es: [-0.25  1.5 ]
+El hessiano analítico en [-0.25  1.5 ] es:
+ [[-523.  100.]
+ [ 100.  200.]]
+El hessiano por diferencias finitas en [-0.25  1.5 ] es:
+ [[-523.5986   99.8   ]
+ [  99.8     200.    ]]
+La norma de Frobenius ||H\_df-H\_a|| en [-0.25  1.5 ] es:
+ 0.662058898046224
+
+
+
+El valor donde se calcula el hessiano es: [1. 1.]
+El hessiano analítico en [1. 1.] es:
+ [[ 802. -400.]
+ [-400.  200.]]
+El hessiano por diferencias finitas en [1. 1.] es:
+ [[ 804.4014 -400.2   ]
+ [-400.2     200.    ]]
+La norma de Frobenius ||H\_df-H\_a|| en [1. 1.] es:
+ 2.417999577950844
+
+
+
+    \end{Verbatim}
+
+    Respecto a las norma de Frobenius la diferencia entre el hessiano
+analítico y el hessiano obtenido por diferencias finitas ronda entre los
+ordenes \(10^{-1}\) y \(1\) par aun tamaño de paso \(h=0.001\).
+
+Considerando \(h=0.0001\) obtenemos lo siguiente
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El tamaño de paso es: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{k}{for} \PY{n}{l} \PY{o+ow}{in} \PY{n}{lamb}\PY{p}{:}
+    \PY{n}{hess\PYZus{}a}\PY{o}{=}\PY{n}{hess\PYZus{}Rosenbrock}\PY{p}{(}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{p}{)}
+    \PY{n}{hess\PYZus{}df}\PY{o}{=}\PY{n}{hess\PYZus{}f}\PY{p}{(}\PY{n}{f\PYZus{}Rosenbrock}\PY{p}{,}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{p}{,}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+    \PY{n}{norm\PYZus{}hess}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{p}{(}\PY{n}{hess\PYZus{}a}\PY{o}{\PYZhy{}}\PY{n}{hess\PYZus{}df}\PY{p}{)}\PY{p}{,}\PY{n+nb}{ord}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fro}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El valor donde se calcula el hessiano es: }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El hessiano analítico en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{hess\PYZus{}a}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El hessiano por diferencias finitas en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{hess\PYZus{}df}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{La norma de Frobenius ||H\PYZus{}df\PYZhy{}H\PYZus{}a|| en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{norm\PYZus{}hess}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+El tamaño de paso es:  0.0001
+
+
+El valor donde se calcula el hessiano es: [-1.5  2. ]
+El hessiano analítico en [-1.5  2. ] es:
+ [[1902.  600.]
+ [ 600.  200.]]
+El hessiano por diferencias finitas en [-1.5  2. ] es:
+ [[1901.64  599.98]
+ [ 599.98  200.  ]]
+La norma de Frobenius ||H\_df-H\_a|| en [-1.5  2. ] es:
+ 0.36109597644905883
+
+
+
+El valor donde se calcula el hessiano es: [-0.25  1.5 ]
+El hessiano analítico en [-0.25  1.5 ] es:
+ [[-523.  100.]
+ [ 100.  200.]]
+El hessiano por diferencias finitas en [-0.25  1.5 ] es:
+ [[-523.06   99.98]
+ [  99.98  200.  ]]
+La norma de Frobenius ||H\_df-H\_a|| en [-0.25  1.5 ] es:
+ 0.06632005904773697
+
+
+
+El valor donde se calcula el hessiano es: [1. 1.]
+El hessiano analítico en [1. 1.] es:
+ [[ 802. -400.]
+ [-400.  200.]]
+El hessiano por diferencias finitas en [1. 1.] es:
+ [[ 802.24 -400.02]
+ [-400.02  200.  ]]
+La norma de Frobenius ||H\_df-H\_a|| en [1. 1.] es:
+ 0.24167482336199914
+
+
+
+    \end{Verbatim}
+
+    En este caso la diferencia entre el hessiano analítico y numérico ronda
+entre los ordenes \(10^{-2}\) y \(10^{-1}\) para cada valor de
+\(\mathbf{x}\).
+
+Finalmente, para \(h=0.00001\) los resultados son los siguientes
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El tamaño de paso es: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{k}{for} \PY{n}{l} \PY{o+ow}{in} \PY{n}{lamb}\PY{p}{:}
+    \PY{n}{hess\PYZus{}a}\PY{o}{=}\PY{n}{hess\PYZus{}Rosenbrock}\PY{p}{(}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{p}{)}
+    \PY{n}{hess\PYZus{}df}\PY{o}{=}\PY{n}{hess\PYZus{}f}\PY{p}{(}\PY{n}{f\PYZus{}Rosenbrock}\PY{p}{,}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{p}{,}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}
+    \PY{n}{norm\PYZus{}hess}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{p}{(}\PY{n}{hess\PYZus{}a}\PY{o}{\PYZhy{}}\PY{n}{hess\PYZus{}df}\PY{p}{)}\PY{p}{,}\PY{n+nb}{ord}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fro}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El valor donde se calcula el hessiano es: }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El hessiano analítico en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{hess\PYZus{}a}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El hessiano por diferencias finitas en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{hess\PYZus{}df}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+sa}{f}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{La norma de Frobenius ||H\PYZus{}df\PYZhy{}H\PYZus{}a|| en }\PY{l+s+si}{\PYZob{}}\PY{n}{x1}\PY{o}{+}\PY{n}{l}\PY{o}{*}\PY{n}{x2}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{ es:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{ }\PY{l+s+si}{\PYZob{}}\PY{n}{norm\PYZus{}hess}\PY{l+s+si}{\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+El tamaño de paso es:  1e-05
+
+
+El valor donde se calcula el hessiano es: [-1.5  2. ]
+El hessiano analítico en [-1.5  2. ] es:
+ [[1902.  600.]
+ [ 600.  200.]]
+El hessiano por diferencias finitas en [-1.5  2. ] es:
+ [[1901.964  599.998]
+ [ 599.998  200.   ]]
+La norma de Frobenius ||H\_df-H\_a|| en [-1.5  2. ] es:
+ 0.03608399064911253
+
+
+
+El valor donde se calcula el hessiano es: [-0.25  1.5 ]
+El hessiano analítico en [-0.25  1.5 ] es:
+ [[-523.  100.]
+ [ 100.  200.]]
+El hessiano por diferencias finitas en [-0.25  1.5 ] es:
+ [[-523.0055   99.9984]
+ [  99.9984  200.0002]]
+La norma de Frobenius ||H\_df-H\_a|| en [-0.25  1.5 ] es:
+ 0.005960397911606387
+
+
+
+El valor donde se calcula el hessiano es: [1. 1.]
+El hessiano analítico en [1. 1.] es:
+ [[ 802. -400.]
+ [-400.  200.]]
+El hessiano por diferencias finitas en [1. 1.] es:
+ [[ 802.024 -400.002]
+ [-400.002  200.   ]]
+La norma de Frobenius ||H\_df-H\_a|| en [1. 1.] es:
+ 0.024166244287936563
+
+
+
+    \end{Verbatim}
+
+    Y aquí la norma de Frobenius de la diferencia entre el hessiano
+analítico y númerico ronda entre los ordenes \(10^{-3}\) y \(10^{-2}\).
+
+Podemos observar que en general, la aproximación del gradiente como del
+hessiano es mejor en \((-0.25,1.5)\), luego en \((1,1)\) y al final la
+peor aproximación se obtiene en \((-1.5,2)\) para cada valor de \(h\).
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

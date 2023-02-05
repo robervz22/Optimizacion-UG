@@ -1,0 +1,1249 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{parcial1\_optimizacion}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+\title{Examen Parcial 1 Optimización}
+\author{Roberto Vásquez Martínez \\ Profesor: Joaquín Peña Acevedo}
+\date{06/Abril/2022}
+\maketitle  
+    
+    
+
+    
+    \hypertarget{curso-de-optimizaciuxf3n-demat}{%
+\section{Curso de Optimización
+(DEMAT)}\label{curso-de-optimizaciuxf3n-demat}}
+
+\hypertarget{parcial-1}{%
+\subsection{Parcial 1}\label{parcial-1}}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Descripción: & Fechas \\
+\midrule
+\endhead
+Fecha de publicación del documento: & \textbf{Abril 6, 2022} \\
+Hora de inicio: & \textbf{15:00} \\
+Hora límite de entrega: & \textbf{18:00} \\
+\bottomrule
+\end{longtable}
+
+\hypertarget{indicaciones}{%
+\subsubsection{Indicaciones}\label{indicaciones}}
+
+Lea con cuidado los ejercicios.
+
+Puede usar las notas de clase y las tareas hechas para resolver el
+examen.
+
+Al final, entregue el notebook con sus respuestas, junto con los códigos
+que hagan falta para reproducir los resultados. Si es más de un archivo,
+genere un archivo ZIP que contenga el notebook y los scripts
+adicionales.
+
+A partir del notebook genere un archivo PDF con las respuestas y envíelo
+por separado antes de la hora límite.
+
+    \hypertarget{ejercicio-1.-3-puntos}{%
+\subsection{Ejercicio 1. (3 puntos)}\label{ejercicio-1.-3-puntos}}
+
+Considere la función \(f: \mathbb{R}^n \rightarrow \mathbb{R}\) definida
+como
+
+\[ f(\mathbf{x}) = \sum_{i=1}^n x_i^2  
++ \left(0.5 \sum_{i=1}^n i x_i  \right)^2
++ \left(0.5 \sum_{i=1}^n i x_i  \right)^4
+\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Para \(n=2, 4, 8, 16, 32\), aplique el método de descenso máximo
+  encontrar un mínimo de la función \(f\), usando como punto inicial
+  \[ \mathbf{x}_0 = (5, -5, 5, -5, ..., 5, -5), \] y una tolerancia
+  \(\tau = \epsilon_m^{1/3}\) para terminar el algoritmo cuando
+  \(\|\nabla f(\mathbf{x}_k)\|<\tau\).
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  Para calcular el tamaño de paso \(\alpha_k\) use el algoritmo de
+  backtracking.
+\item
+  Reporte el valor \(n\), el punto \(\mathbf{x}_k\) que devuelve el
+  algoritmo, el valor de \(k\), la magnitud
+  \(\|\nabla f(\mathbf{x}_k)\|\) y un mensaje que indique si cumplió el
+  criterio de convergencia del algoritmo.
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+  Repita el paso ejercicio anterior usando el método de Newton, con
+  tamaño de paso \(\alpha_k=1\).
+\item
+  Escriba un comentario sobre el desempeño de estos métodos de
+  optimización cuando la dimensión \(n\) aumenta.
+\end{enumerate}
+
+\begin{quote}
+\textbf{Nota:} Puede calcular el gradiente y Hessiana de la función de
+manera analítica o usar aproximaciones numéricas.
+\end{quote}
+
+\hypertarget{respuesta}{%
+\subsubsection{Respuesta}\label{respuesta}}
+
+    Utilizaremos el módulo \texttt{lib\_examen\_1} para importar desde ahí
+las funciones correspondientes a cada algoritmo de optimización. En este
+caso usaremos \texttt{grad\_max} para el método de descenso máximo y
+\texttt{newton\_fix\_step} para el método de Newton
+
+    \hypertarget{muxe9todo-de-descenso-muxe1ximo}{%
+\subsubsection{Método de descenso
+máximo}\label{muxe9todo-de-descenso-muxe1ximo}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{importlib}
+\PY{k+kn}{import} \PY{n+nn}{lib\PYZus{}examen\PYZus{}1}
+\PY{n}{importlib}\PY{o}{.}\PY{n}{reload}\PY{p}{(}\PY{n}{lib\PYZus{}examen\PYZus{}1}\PY{p}{)}
+\PY{k+kn}{from} \PY{n+nn}{lib\PYZus{}examen\PYZus{}1} \PY{k+kn}{import} \PY{n}{proof\PYZus{}grad\PYZus{}max}\PY{p}{,} \PY{n}{f\PYZus{}eje1}\PY{p}{,} \PY{n}{grad\PYZus{}f\PYZus{}eje1}
+
+\PY{n}{tol}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{eps}\PY{o}{*}\PY{o}{*}\PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{3}\PY{p}{)}
+\PY{n}{N}\PY{o}{=}\PY{l+m+mi}{1000}
+\PY{n}{rho}\PY{o}{=}\PY{l+m+mf}{0.8}
+
+\PY{n}{n\PYZus{}values}\PY{o}{=}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{8}\PY{p}{,}\PY{l+m+mi}{16}\PY{p}{,}\PY{l+m+mi}{32}\PY{p}{]}
+\PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n}{n\PYZus{}values}\PY{p}{:}
+    \PY{n}{x0}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mf}{5.0}\PY{o}{*}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{n}{i} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El valor de n es: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{n}\PY{p}{)}
+    \PY{n}{proof\PYZus{}grad\PYZus{}max}\PY{p}{(}\PY{n}{f\PYZus{}eje1}\PY{p}{,}\PY{n}{grad\PYZus{}f\PYZus{}eje1}\PY{p}{,}\PY{n}{x0}\PY{p}{,}\PY{n}{N}\PY{p}{,}\PY{n}{tol}\PY{p}{,}\PY{n}{rho}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+El valor de n es:  2
+El algoritmo de descenso máximo con backtracking CONVERGE
+k =  118
+xk =  [-5.75245424e-07 -1.15049085e-06]
+fk =  3.722707097928575e-12
+||gk|| =  5.788295421060735e-06
+
+
+
+El valor de n es:  4
+El algoritmo de descenso máximo con backtracking CONVERGE
+k =  141
+xk =  [5.78189256e-08 1.15621241e-07 1.73445703e-07 2.31248018e-07]
+fk =  8.52298038012629e-13
+||gk|| =  5.383134151117816e-06
+
+
+
+El valor de n es:  8
+El algoritmo de descenso máximo con backtracking CONVERGE
+k =  514
+xk =  [ 4.18702547e-07 -4.04817040e-07  4.27959552e-07 -3.95560035e-07
+  4.37216557e-07 -3.86303030e-07  4.46473562e-07 -3.77046025e-07]
+fk =  1.487461552736672e-12
+||gk|| =  5.684802804595089e-06
+
+
+
+El valor de n es:  16
+El algoritmo de descenso máximo con backtracking NO CONVERGE
+k =  1000
+xk =  [ 0.14996026 -0.14786586  0.15135652 -0.1464696   0.15275279 -0.14507334
+  0.15414905 -0.14367707  0.15554531 -0.14228081  0.15694158 -0.14088455
+  0.15833784 -0.13948828  0.1597341  -0.13809202]
+fk =  0.36116207576615017
+||gk|| =  3.5413958228494193
+
+
+
+El valor de n es:  32
+El algoritmo de descenso máximo con backtracking NO CONVERGE
+k =  1000
+xk =  [ 3.45740741 -3.44320504  3.46687566 -3.43373679  3.4763439  -3.42426855
+  3.48581215 -3.4148003   3.4952804  -3.40533205  3.50474864 -3.39586381
+  3.51421689 -3.38639556  3.52368514 -3.37692732  3.53315338 -3.36745907
+  3.54262163 -3.35799082  3.55208988 -3.34852258  3.56155812 -3.33905433
+  3.57102637 -3.32958608  3.58049462 -3.32011784  3.58996286 -3.31064959
+  3.59943111 -3.30118134]
+fk =  381.58423821301477
+||gk|| =  104.27115345729494
+
+
+
+    \end{Verbatim}
+
+    \hypertarget{muxe9todo-de-newton}{%
+\subsubsection{Método de Newton}\label{muxe9todo-de-newton}}
+
+Con el mismo número de iteraciones máxima y tolerancia ejecutamos el
+método de Newton
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{importlib}\PY{o}{.}\PY{n}{reload}\PY{p}{(}\PY{n}{lib\PYZus{}examen\PYZus{}1}\PY{p}{)}
+\PY{k+kn}{from} \PY{n+nn}{lib\PYZus{}examen\PYZus{}1} \PY{k+kn}{import} \PY{n}{newton\PYZus{}fix\PYZus{}step}\PY{p}{,} \PY{n}{hess\PYZus{}f\PYZus{}eje1}
+
+\PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n}{n\PYZus{}values}\PY{p}{:}
+    \PY{n}{x0}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mf}{5.0}\PY{o}{*}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{n}{i} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+    \PY{n}{dic\PYZus{}results}\PY{p}{,} \PY{n}{trayectory}\PY{o}{=}\PY{n}{newton\PYZus{}fix\PYZus{}step}\PY{p}{(}\PY{n}{f\PYZus{}eje1}\PY{p}{,}\PY{n}{grad\PYZus{}f\PYZus{}eje1}\PY{p}{,}
+    \PY{n}{hess\PYZus{}f\PYZus{}eje1}\PY{p}{,}\PY{n}{x0}\PY{p}{,}\PY{n}{N}\PY{p}{,}\PY{n}{tol}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El valor de n es: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{n}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} Punto crítico}
+    \PY{k}{if} \PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{res}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{==}\PY{l+m+mi}{1}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{res = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{res}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El método de descenso máximo con paso fijo CONVERGE}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fk = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fk}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{||gk|| = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gk}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+        \PY{n}{xk}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{squeeze}\PY{p}{(}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xk}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xk = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{xk}\PY{p}{)}
+    \PY{k}{elif} \PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{res}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{==}\PY{l+m+mi}{0}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{res = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{res}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El método de descenso máximo con paso exacto NO CONVERGE}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fk = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fk}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{||gk|| = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{linalg}\PY{o}{.}\PY{n}{norm}\PY{p}{(}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gk}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+        \PY{n}{xk}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{squeeze}\PY{p}{(}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xk}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xk = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{xk}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+    
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+El valor de n es:  2
+res =  1
+El método de descenso máximo con paso fijo CONVERGE
+k =  6
+fk =  1.692176464050546e-13
+||gk|| =  1.2340821762126418e-06
+xk =  [-1.22644073e-07 -2.45288145e-07]
+
+
+El valor de n es:  4
+res =  1
+El método de descenso máximo con paso fijo CONVERGE
+k =  9
+fk =  1.4140683764719477e-31
+||gk|| =  2.1926770122390276e-15
+xk =  [-2.35483100e-17 -4.70972553e-17 -7.06457242e-17 -9.41945107e-17]
+
+
+El valor de n es:  8
+res =  1
+El método de descenso máximo con paso fijo CONVERGE
+k =  10
+fk =  1.575705360411473e-13
+||gk|| =  5.724916723985908e-06
+xk =  [-3.85408023e-09 -7.70816045e-09 -1.15622407e-08 -1.54163209e-08
+ -1.92704011e-08 -2.31244814e-08 -2.69785616e-08 -3.08326418e-08]
+
+
+El valor de n es:  16
+res =  1
+El método de descenso máximo con paso fijo CONVERGE
+k =  12
+fk =  8.338488006148036e-18
+||gk|| =  1.1183797212584844e-07
+xk =  [-3.85533594e-12 -7.71067184e-12 -1.15660078e-11 -1.54213436e-11
+ -1.92766790e-11 -2.31320155e-11 -2.69873515e-11 -3.08426873e-11
+ -3.46980232e-11 -3.85533579e-11 -4.24086951e-11 -4.62640313e-11
+ -5.01193683e-11 -5.39747013e-11 -5.78300391e-11 -6.16853748e-11]
+
+
+El valor de n es:  32
+res =  1
+El método de descenso máximo con paso fijo CONVERGE
+k =  14
+fk =  6.043580290887581e-24
+||gk|| =  2.629880849941907e-10
+xk =  [-4.29706225e-16 -8.59427107e-16 -1.28913959e-15 -1.71884058e-15
+ -2.14855689e-15 -2.57827941e-15 -3.00793880e-15 -3.43773248e-15
+ -3.86731281e-15 -4.29710516e-15 -4.72681458e-15 -5.15661188e-15
+ -5.58620225e-15 -6.01597800e-15 -6.44567218e-15 -6.87547943e-15
+ -7.30511781e-15 -7.73464880e-15 -8.16429965e-15 -8.59412074e-15
+ -9.02395995e-15 -9.45361026e-15 -9.88331945e-15 -1.03131330e-14
+ -1.07428232e-14 -1.11723172e-14 -1.16020575e-14 -1.20316877e-14
+ -1.24620341e-14 -1.28912341e-14 -1.33207195e-14 -1.37509120e-14]
+
+
+    \end{Verbatim}
+
+    La convergencia del método de Newton es mucho mejor, porque de hecho la
+función es casi cuadrática y pues el método de Newton esta basado en una
+aproximación de orden 2. El número de iteraciones aumenta como aumenta
+la dimensión esto se debe al tiempo se tarde en evaluar las expresiones
+pero intuitivamente es más porque la suma \(\sum rx_r\) tiene a aumentar
+en unos ejes más que en otros, por lo que tenemos el problema de las
+elipses alargadas quizas en el método de descenso máximo, entonces
+descenso máximo con el algoritmo de backtracking el tamaño de paso que
+se tiene que dar es pequeño lo que aumenta el número de iteraciones aun
+más.
+
+    \hypertarget{ejercicio-2.-4-puntos}{%
+\subsection{Ejercicio 2. (4 puntos)}\label{ejercicio-2.-4-puntos}}
+
+Ajustar el modelo
+
+\[ g(x; z_1, z_2, z_3, z_4)
+= z_1 - z_2\exp(-\exp(z_3+z_4\log(x)))
+\]
+
+al conjunto de puntos \(\{(x_i, y_i)\}\) que se muestran a continuación:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+
+\PY{n}{puntos} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[} \PY{l+m+mf}{9.0}\PY{p}{,}  \PY{l+m+mf}{8.93}\PY{p}{]}\PY{p}{,}
+                   \PY{p}{[}\PY{l+m+mf}{14.0}\PY{p}{,} \PY{l+m+mf}{10.80}\PY{p}{]}\PY{p}{,}
+                   \PY{p}{[}\PY{l+m+mf}{21.0}\PY{p}{,} \PY{l+m+mf}{18.59}\PY{p}{]}\PY{p}{,}
+                   \PY{p}{[}\PY{l+m+mf}{28.0}\PY{p}{,} \PY{l+m+mf}{22.33}\PY{p}{]}\PY{p}{,}
+                   \PY{p}{[}\PY{l+m+mf}{42.0}\PY{p}{,} \PY{l+m+mf}{39.35}\PY{p}{]}\PY{p}{,}
+                   \PY{p}{[}\PY{l+m+mf}{57.0}\PY{p}{,} \PY{l+m+mf}{56.11}\PY{p}{]}\PY{p}{,}
+                   \PY{p}{[}\PY{l+m+mf}{63.0}\PY{p}{,} \PY{l+m+mf}{61.73}\PY{p}{]}\PY{p}{,}
+                   \PY{p}{[}\PY{l+m+mf}{70.0}\PY{p}{,} \PY{l+m+mf}{64.62}\PY{p}{]}\PY{p}{,}
+                   \PY{p}{[}\PY{l+m+mf}{79.0}\PY{p}{,} \PY{l+m+mf}{67.08}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{puntos}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{puntos}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r*}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+Text(0, 0.5, 'y')
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{parcial1_optimizacion_files/parcial1_optimizacion_9_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Considere los residuales
+
+\[ r_i(\mathbf{z}) = r_i(z_1, z_2, z_3, z_4) = g(x_1; z_1, z_2, z_3, z_4) - y_i \]
+
+Calcule los parámetros \(\mathbf{z} = (z_1, z_2, z_3, z_4)\) resolviendo
+el problema de mínimos cuadrados
+
+\[ \min_{z} \; f(\mathbf{z}) = \frac{1}{2}\sum_{i=1}^9 r_i^2(\mathbf{z}). \]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Aplique el método de Levenberg-Marquart partiendo del punto inicial
+  \(\mathbf{z}_0 = (75, 50.0, -5, 1.1)\), una tolerancia
+  \(\tau=\sqrt{\epsilon_m}\) y \(\mu_{ref}=0.001\) (ver Tarea 7).
+  Reporte el punto \(\mathbf{z}_k\) que devuelve el algoritmo, el valor
+  \(f(\mathbf{z}_k)\), el número de iteraciones \(k\) y la variable
+  \(res\) que indica si el algoritmo terminó porque se cumplió la
+  tolerancia dada.
+\item
+  Grafique los datos y la curva del modelo usando los valores del punto
+  inicial \(\mathbf{z}_0\) y del punto \(\mathbf{z}_k\) que devuelve el
+  algoritmo.
+\item
+  En algunos casos puede ser complicado encontrar un buen punto inicial
+  para el algoritmo. Pruebe con diferentes puntos iniciales generados de
+  manera aleatoria y conserve la mejor solución encontrada:
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  Para \(i=1, 2, ..., 25\), genere el punto inicial
+  \(\mathbf{z}_0 = (z_{0,1}, z_{0,2}, z_{0,3}, z_{0,4})\)
+  aleatoriamente, de modo que
+\end{itemize}
+
+\[ z_{0,1} \in [50, 80], \quad z_{0,2} \in [50, 80], 
+\quad z_{0,3} \in [-10, -5], \quad  z_{0,4} \in [1, 2] \] - Para cada
+punto inicial, ejecute el método de Levenberg-Marquart. - En cada
+iteración, imprima los valores
+
+\[i, \quad \mathbf{z}_{k_i}, \quad  k_i,  \quad  f(\mathbf{z}_{k_i}), \quad res\]
+
+\begin{itemize}
+\tightlist
+\item
+  Defina \(\mathbf{z}_{min}\) como el punto \(\mathbf{z}_{k_i}\) en el
+  que se obtuvo el menor valor de \(f(\mathbf{z})\) para
+  \(i=1,2,...25\), y defina \(\mathbf{z}_{ini}\) como el punto inicial
+  \(\mathbf{z}_0\) con el cual se obtuvo \(\mathbf{z}_{min}\).
+\item
+  Grafique los datos y la curva del modelo usando los valores del punto
+  \(\mathbf{z}_{ini}\) y los valores del mejor punto
+  \(\mathbf{z}_{min}\).
+\item
+  Revisando los valores de \(f(\mathbf{z}_{k_i})\), escriba un
+  comentario sobre sobre si es fácil o no alcanzar el mejor valor
+  \(f(\mathbf{z}_{min})\) o que se mantengan los valores de los
+  parámetros \(z_1, z_2, z_3, z_4\) en los intervalos que se
+  consideraron para dar los valores iniciales.
+\end{itemize}
+
+\begin{quote}
+\textbf{Nota 1:} Debido a las exponenciales que aparecen en el modelo
+\(g(x; \mathbf{z})\) puede ocurrir un desbordamiento de los valores o en
+la solución del sistema de ecuaciones, etc. Puede agregar el manejo de
+excepciones para que no se interrumpa el ciclo que genera a los puntos
+\(\mathbf{z}_{k_i}\). Como el objetivo es quedarse con el mejor punto,
+no importa si en\\
+algunos casos el algoritmo falla o se interrumpe por generarse una
+excepción.
+\end{quote}
+
+\begin{quote}
+\textbf{Nota 2:} Para generar un número aleatorio con distribución
+uniforme en el intervalo \([a,b]\) puede usar
+\(a + np.random.rand(1)*(b-a)\).
+\end{quote}
+
+    \hypertarget{respuesta}{%
+\subsubsection{Respuesta}\label{respuesta}}
+
+    La función que ejecuta el algoritmo de Levenberg-Marquardt y grafica el
+modelo paramétrico con \(z_0\) y \(z_k\) es
+\texttt{proof\_levenberg\_marquardt\_nlls}. A continuación ejecutamos
+esta función con \(z_0=(75,50,-5,1.1)\)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{importlib}\PY{o}{.}\PY{n}{reload}\PY{p}{(}\PY{n}{lib\PYZus{}examen\PYZus{}1}\PY{p}{)}
+\PY{k+kn}{from} \PY{n+nn}{lib\PYZus{}examen\PYZus{}1} \PY{k+kn}{import} \PY{o}{*}
+
+\PY{n}{N}\PY{o}{=}\PY{l+m+mi}{1000}
+\PY{n}{tol}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{eps}\PY{o}{*}\PY{o}{*}\PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{mu\PYZus{}ref}\PY{o}{=}\PY{l+m+mf}{0.001}
+
+\PY{n}{z0}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mf}{75.0}\PY{p}{,}\PY{l+m+mf}{50.0}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mf}{5.0}\PY{p}{,}\PY{l+m+mf}{1.1}\PY{p}{]}\PY{p}{)}
+
+\PY{n}{proof\PYZus{}levenberg\PYZus{}marquardt\PYZus{}nlls}\PY{p}{(}\PY{n}{R}\PY{p}{,}\PY{n}{J}\PY{p}{,}\PY{n}{z0}\PY{p}{,}\PY{n}{N}\PY{p}{,}\PY{n}{tol}\PY{p}{,}\PY{n}{mu\PYZus{}ref}\PY{p}{,}\PY{n}{puntos}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+El algoritmo de Levenberg-Marquardt CONVERGE
+z0 =  [75.  50.  -5.   1.1]
+f(z0) =  935.6411376104923
+zk =  [ -50.54719015  -89.38496793 -427.67921188 -986.93518848]
+f(zk) =  2324.031677777778
+|pk| =  4.976683322014578e-10
+k =  8
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{parcial1_optimizacion_files/parcial1_optimizacion_13_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Ahora lo que haremos será buscar una condición inicial apropiada
+aleatoriamente
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{importlib}\PY{o}{.}\PY{n}{reload}\PY{p}{(}\PY{n}{lib\PYZus{}examen\PYZus{}1}\PY{p}{)}
+\PY{k+kn}{from} \PY{n+nn}{lib\PYZus{}examen\PYZus{}1} \PY{k+kn}{import} \PY{o}{*}
+\PY{n}{z\PYZus{}ini}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{empty}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{25}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{25}\PY{p}{)}\PY{p}{:}
+    \PY{n}{z\PYZus{}ini}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{=}\PY{l+m+mf}{50.0} \PY{o}{+} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{rand}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{p}{(}\PY{l+m+mf}{30.0}\PY{p}{)}
+    \PY{n}{z\PYZus{}ini}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{=}\PY{l+m+mf}{50.0} \PY{o}{+} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{rand}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{p}{(}\PY{l+m+mf}{30.0}\PY{p}{)}
+    \PY{n}{z\PYZus{}ini}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{=}\PY{o}{\PYZhy{}}\PY{l+m+mf}{10.0} \PY{o}{+} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{rand}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{p}{(}\PY{l+m+mf}{5.0}\PY{p}{)}
+    \PY{n}{z\PYZus{}ini}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{]}\PY{o}{=}\PY{l+m+mf}{1.0} \PY{o}{+} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{rand}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{*}\PY{p}{(}\PY{l+m+mf}{1.0}\PY{p}{)}
+
+\PY{n}{array\PYZus{}zki}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{n}{array\PYZus{}fki}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{empty}\PY{p}{(}\PY{l+m+mi}{25}\PY{p}{)}
+
+\PY{k}{for} \PY{n}{i}\PY{p}{,}\PY{n}{z0} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{z\PYZus{}ini}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{i = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}
+    \PY{n}{dic\PYZus{}results}\PY{o}{=}\PY{n}{levenberg\PYZus{}marquardt\PYZus{}nlls}\PY{p}{(}\PY{n}{R}\PY{p}{,}\PY{n}{J}\PY{p}{,}\PY{n}{z0}\PY{p}{,}\PY{n}{N}\PY{p}{,}\PY{n}{tol}\PY{p}{,}\PY{n}{mu\PYZus{}ref}\PY{p}{,}\PY{n}{puntos}\PY{p}{)}
+    \PY{n}{array\PYZus{}zki}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{zk}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+    \PY{n}{array\PYZus{}fki}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{=}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fk}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{zki = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{array\PYZus{}zki}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ki = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{f(zki) = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{array\PYZus{}fki}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{res = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{res}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+i =  1
+zki =  [  71.94111955   33.10334177  -63.03041231 -200.04611535]
+ki =  6
+f(zki) =  2324.031677777778
+res =  1
+
+
+i =  2
+zki =  [   9.865       -37.25071429 1809.2036215  -680.69563835]
+ki =  11
+f(zki) =  1244.7750107142858
+res =  1
+
+
+i =  3
+zki =  [ 38.83777778  65.58176544 118.32812078  -4.21941313]
+ki =  4
+f(zki) =  2324.031677777778
+res =  1
+
+
+i =  4
+zki =  [38.83777778 67.98585674 15.31416772 -2.76621659]
+ki =  19
+f(zki) =  2324.0316777993457
+res =  1
+
+
+i =  5
+zki =  [nan nan nan nan]
+ki =  1000
+f(zki) =  nan
+res =  0
+
+
+i =  6
+zki =  [ 73.34652313  34.50874535  56.91884315 -66.29523699]
+ki =  6
+f(zki) =  2324.031677777778
+res =  1
+
+
+i =  7
+zki =  [  71.66973927   32.83196149  260.63670462 -211.35476575]
+ki =  5
+f(zki) =  2324.031677777778
+res =  1
+
+
+i =  8
+zki =  [ 7.41880244e+01  3.53502466e+01 -4.97345184e-01 -5.75970769e+02]
+ki =  6
+f(zki) =  2324.0316777777775
+res =  1
+
+
+i =  9
+zki =  [ 38.83777778  69.3175003  100.81607275  12.81430231]
+ki =  4
+f(zki) =  2324.0316777777775
+res =  1
+
+
+i =  10
+zki =  [38.83777778 66.57341045 25.66284646 -3.28984079]
+ki =  4
+f(zki) =  2324.0316777777775
+res =  1
+
+
+i =  11
+zki =  [  47.11571429   38.18571429 -188.55991947   70.31616736]
+ki =  16
+f(zki) =  1243.9007857142856
+res =  1
+
+
+i =  12
+zki =  [    57.53311869     18.69534092  -6571.64732747 -16087.20250785]
+ki =  17
+f(zki) =  2324.031677777778
+res =  1
+
+
+i =  13
+zki =  [69.95519317 61.6814639  -9.20893083  2.37781753]
+ki =  18
+f(zki) =  4.1879417795020135
+res =  1
+
+
+i =  14
+zki =  [69.95517822 61.68144258 -9.20893559  2.37781887]
+ki =  14
+f(zki) =  4.187941779469073
+res =  1
+
+
+i =  15
+zki =  [38.83777778 58.15169674 -3.84675145  3.6016864 ]
+ki =  6
+f(zki) =  2324.031677777778
+res =  1
+
+
+i =  16
+zki =  [  38.83777778   64.06524696  613.37847684 -133.89070539]
+ki =  5
+f(zki) =  2324.031677777778
+res =  1
+
+
+i =  17
+zki =  [38.83777778 63.74312558 -3.56967269  6.91024702]
+ki =  9
+f(zki) =  2324.0316777777775
+res =  1
+
+
+i =  18
+zki =  [69.95518683 61.68145486 -9.20893285  2.3778181 ]
+ki =  17
+f(zki) =  4.187941779479113
+res =  1
+
+
+i =  19
+zki =  [38.83777777 54.4012894  35.19426525 79.89900385]
+ki =  5
+f(zki) =  2324.031677777778
+res =  1
+
+
+i =  20
+zki =  [69.95517934 61.68144418 -9.20893523  2.37781877]
+ki =  13
+f(zki) =  4.187941779469004
+res =  1
+
+
+i =  21
+zki =  [69.9551818  61.68144768 -9.20893445  2.37781855]
+ki =  16
+f(zki) =  4.187941779470297
+res =  1
+
+
+i =  22
+zki =  [ 38.83777778  54.49677033 156.48464742 -22.71276163]
+ki =  4
+f(zki) =  2324.031677777778
+res =  1
+
+
+i =  23
+zki =  [   64.47666667    38.45833333 -3246.83231872   792.17100575]
+ki =  18
+f(zki) =  844.9882749999999
+res =  1
+
+
+i =  24
+zki =  [  42.57625      33.64626336 -107.62394722   42.27377725]
+ki =  9
+f(zki) =  1820.8893937500002
+res =  1
+
+
+i =  25
+zki =  [69.95518371 61.68145041 -9.20893384  2.37781838]
+ki =  16
+f(zki) =  4.187941779472666
+res =  1
+
+
+    \end{Verbatim}
+
+    La salida no se puede mostrar completa, sin embargo obtenemos el
+\(\mathbf{z}_{min}\) y hacemos la grafica correspondiente
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{index\PYZus{}min}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{nanargmin}\PY{p}{(}\PY{n}{array\PYZus{}fki}\PY{p}{)}
+\PY{n}{z\PYZus{}min}\PY{o}{=}\PY{n}{array\PYZus{}zki}\PY{p}{[}\PY{n}{index\PYZus{}min}\PY{p}{]}
+\PY{n}{z\PYZus{}0min}\PY{o}{=}\PY{n}{z\PYZus{}ini}\PY{p}{[}\PY{n}{i}\PY{p}{,}\PY{p}{:}\PY{p}{]}
+
+\PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{Gráfica del ajuste obtenido}
+\PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{o}{=}\PY{n}{puntos}\PY{o}{.}\PY{n}{T}
+\PY{n}{x\PYZus{}linspace}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{min}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{,}\PY{n}{num}\PY{o}{=}\PY{l+m+mi}{1000}\PY{p}{)}
+\PY{n}{y\PYZus{}model\PYZus{}k}\PY{o}{=}\PY{n}{z\PYZus{}min}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{\PYZhy{}}\PY{n}{z\PYZus{}min}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{n}{z\PYZus{}min}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{+}\PY{n}{z\PYZus{}min}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{log}\PY{p}{(}\PY{n}{x\PYZus{}linspace}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\PY{n}{y\PYZus{}model\PYZus{}ini}\PY{o}{=}\PY{n}{z\PYZus{}0min}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{\PYZhy{}}\PY{n}{z\PYZus{}0min}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{n}{z\PYZus{}0min}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{+}\PY{n}{z\PYZus{}0min}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{log}\PY{p}{(}\PY{n}{x\PYZus{}linspace}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{style}\PY{o}{.}\PY{n}{use}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{seaborn}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ro}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{muestra}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x\PYZus{}linspace}\PY{p}{,}\PY{n}{y\PYZus{}model\PYZus{}k}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b\PYZhy{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{punto final}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{x\PYZus{}linspace}\PY{p}{,}\PY{n}{y\PYZus{}model\PYZus{}ini}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{g\PYZhy{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{punto inicial}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Levenberg\PYZhy{}Marquardt}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}f(}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{mathbf}\PY{l+s+si}{\PYZob{}z\PYZcb{}}\PY{l+s+s1}{\PYZus{}k)\PYZdl{}=}\PY{l+s+si}{\PYZpc{}.4f}\PY{l+s+s1}{\PYZsq{}}\PY{o}{\PYZpc{}}\PY{p}{(}\PY{n}{array\PYZus{}fki}\PY{p}{[}\PY{n}{index\PYZus{}min}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{parcial1_optimizacion_files/parcial1_optimizacion_17_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    En el que tenemos un ajuste aceptable. Revisando los valores de la
+función objetivo finales en cada iteración tenemos
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{array\PYZus{}fki}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array([2324.03167778, 1244.77501071, 2324.03167778, 2324.0316778 ,
+                 nan, 2324.03167778, 2324.03167778, 2324.03167778,
+       2324.03167778, 2324.03167778, 1243.90078571, 2324.03167778,
+          4.18794178,    4.18794178, 2324.03167778, 2324.03167778,
+       2324.03167778,    4.18794178, 2324.03167778,    4.18794178,
+          4.18794178, 2324.03167778,  844.988275  , 1820.88939375,
+          4.18794178])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Vemos que realmente no es tan fácil obtener un valor cercano al óptimo
+de la función objetivo \(f\), pues en su mayoría los valores son
+bastante más grandes. Podriamos ahora generar intervalos alrededor de
+las condiciones iniciales en las que se obtuvo un buen valor de la
+función objetivo.
+
+    \hypertarget{ejercicio-3-3-puntos}{%
+\subsection{Ejercicio 3 (3 puntos)}\label{ejercicio-3-3-puntos}}
+
+Queremos encontrar una solución del problema de optimización con
+restricciones
+
+\[ \min_{x_1,x_2} f(x_1,x_2) = 2(x_1^2 + x_2^2 - 1) - x_1 \]
+
+sujeto a que el punto \((x_1,x_2)\) esté sobre el círculo unitario, es
+decir,
+
+\[ x_1^2 + x_2^2 - 1 = 0.\]
+
+Una manera de hallar una aproximación es convertir este problema de
+optimización sin restricciones. Un enfoque es el de penalización
+cuadrática en el cual se construye la función
+
+\[ Q(x_1, x_2; \mu) = f(x_1,x_2) + \frac{\mu}{2} g(x_1, x_2),\]
+
+donde \(g(x_1, x_2) = (x_1^2 + x_2^2 - 1)^2\) es el cuadrado de la
+restricción que queremos que se cumpla.
+
+La idea es:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Dar un punto inicial \(\mathbf{x}_0 =(10, 8)\) y un valor del
+  parámetro \(\mu_0= 1\).
+\item
+  Para \(r=0, 1, 2, 3\):
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  Calcular el mínimo de la función \(Q(\mathbf{x}; \mu_r)\) usando el
+  punto inicial \(\mathbf{x}_0\)
+\item
+  Imprimir \(\mu_r\), el óptimo \(\mathbf{x}_k\) que devuelve el
+  algoritmo, los valores \(Q(\mathbf{x}_k; \mu_k)\), \(f(\mathbf{x}_k)\)
+  y \(g(\mathbf{x}_k)\)
+\item
+  Hacer \(\mu_{r+1} = 10\mu_r\) y \(\mathbf{x}_0=\mathbf{x}_k\).
+\end{itemize}
+
+El último punto \(\mathbf{x}_k\) generado debería ser una aproximación
+de la solución del problema original porque
+\(Q(\mathbf{x}; \mu_r)= f(\mathbf{x})\) si \(\mathbf{x}\) cumple la
+restricción. Si no, \(Q(\mathbf{x}; \mu_r)> f(\mathbf{x})\) y el valor
+de \(Q\) aumenta conforme aumenta el valor de \(\mu_r\). De este modo,
+al ir incrementando gradualmente el valor \(\mu\), se penaliza cada vez
+más a los puntos que no satisfacen la restricción y eso hace que en cada
+iteración \(r\) se obtenga un punto que está más cerca de cumplir la
+restricción.
+
+Note que en cada iteración \(r\), se usa como punto inicial para el
+algoritmo de optimización el punto que se obtuvo en la iteración
+anterior. Esto ayuda a que los óptimos que se obtienen en cada iteración
+gradualmente se vayan cumpliendo la restricción.
+
+\hypertarget{respuesta}{%
+\subsubsection{Respuesta}\label{respuesta}}
+
+    A continuación haremos presentamos el esquema anterior optimizando la
+función \(Q(\mathbf{x};\mu)\) dado \(\mu\) vía Newton Raphson
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{35}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{importlib}\PY{o}{.}\PY{n}{reload}\PY{p}{(}\PY{n}{lib\PYZus{}examen\PYZus{}1}\PY{p}{)}
+\PY{k+kn}{from} \PY{n+nn}{lib\PYZus{}examen\PYZus{}1} \PY{k+kn}{import} \PY{o}{*}
+
+\PY{n}{N}\PY{o}{=}\PY{l+m+mi}{1000}
+\PY{n}{tol}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{finfo}\PY{p}{(}\PY{n+nb}{float}\PY{p}{)}\PY{o}{.}\PY{n}{eps}\PY{o}{*}\PY{o}{*}\PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{3}\PY{p}{)}
+\PY{n}{mu}\PY{o}{=}\PY{l+m+mf}{1.0}
+\PY{n}{x0}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{l+m+mf}{10.0}\PY{p}{,}\PY{l+m+mf}{8.0}\PY{p}{]}\PY{p}{)}
+\PY{n}{a0}\PY{p}{,}\PY{n}{c}\PY{o}{=}\PY{l+m+mf}{2.0}\PY{p}{,}\PY{l+m+mf}{1e\PYZhy{}4} \PY{c+c1}{\PYZsh{} Tamaño inicial y factor de proporción fijo para las pruebas}
+\PY{n}{rho}\PY{o}{=}\PY{l+m+mf}{0.5}
+
+\PY{c+c1}{\PYZsh{} Optimizacion sin reestriccion iterativa}
+\PY{k}{for} \PY{n}{r} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{)}\PY{p}{:}
+    \PY{n}{dic\PYZus{}results}\PY{o}{=}\PY{n}{grad\PYZus{}max\PYZus{}eje3}\PY{p}{(}\PY{n}{f\PYZus{}opt\PYZus{}eje3}\PY{p}{,}\PY{n}{grad\PYZus{}f\PYZus{}opt\PYZus{}eje3}\PY{p}{,}\PY{n}{x0}\PY{p}{,}\PY{n}{N}\PY{p}{,}\PY{n}{tol}\PY{p}{,}\PY{n}{a0}\PY{p}{,}\PY{n}{rho}\PY{p}{,}\PY{n}{c}\PY{p}{,}\PY{n}{mu}\PY{p}{)}
+    \PY{k}{if} \PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{res}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{==}\PY{l+m+mi}{1}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El algoritmo CONVERGE}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mu\PYZus{}r = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{mu}\PY{p}{)}
+        \PY{n}{xk}\PY{o}{=}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xk}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xk = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{xk}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Qk = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{dic\PYZus{}results}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fk}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fk = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{f\PYZus{}eje3}\PY{p}{(}\PY{n}{xk}\PY{p}{)}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gk = }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{g\PYZus{}eje3}\PY{p}{(}\PY{n}{xk}\PY{p}{)}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{x0}\PY{o}{=}\PY{n}{xk}
+        \PY{n}{mu}\PY{o}{=}\PY{l+m+mf}{10.0}\PY{o}{*}\PY{n}{mu}
+    \PY{k}{else}\PY{p}{:} 
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{El algoritmo NO CONVERGE}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{k}{break}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+El algoritmo CONVERGE
+mu\_r =  1.0
+xk =  [4.23852450e-01 1.10217923e-15]
+Qk =  -1.7280643278065917
+fk =  -2.0645506514225485
+gk =  0.6729726472319135
+
+
+El algoritmo CONVERGE
+mu\_r =  10.0
+xk =  [9.24176668e-01 1.57548970e-15]
+Qk =  -1.1095412580699155
+fk =  -1.2159716398975506
+gk =  0.021286076365527005
+
+
+El algoritmo CONVERGE
+mu\_r =  100.0
+xk =  [9.92490733e-01 1.53318783e-15]
+Qk =  -1.0112217338041674
+fk =  -1.0224150235300673
+gk =  0.00022386579451799847
+
+
+El algoritmo CONVERGE
+mu\_r =  1000.0
+xk =  [9.99249908e-01 1.33114696e-15]
+Qk =  -1.0011247186093135
+fk =  -1.0022491512681861
+gk =  2.248865317745207e-06
+
+
+    \end{Verbatim}
+
+    En efecto vemos como el valor de \(Q\) y \(f\) en cada iteración se
+aproxima pues al penalizar forzamos a \(g\) a hacerse casi \(0\). Al
+final obtenemos el punto optimo en la circunferencia unitaria \((1,0)\).
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
